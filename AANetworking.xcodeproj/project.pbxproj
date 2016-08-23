@@ -14,6 +14,9 @@
 		DEF4E6021D6C29160022992C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DEF4E6001D6C29160022992C /* LaunchScreen.storyboard */; };
 		DEF4E60D1D6C29160022992C /* AANetworkingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEF4E60C1D6C29160022992C /* AANetworkingTests.swift */; };
 		DEF4E6181D6C29160022992C /* AANetworkingUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEF4E6171D6C29160022992C /* AANetworkingUITests.swift */; };
+		DEF4E6281D6C298E0022992C /* WebServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEF4E6261D6C298E0022992C /* WebServiceManager.swift */; };
+		DEF4E6291D6C298E0022992C /* WebServiceOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEF4E6271D6C298E0022992C /* WebServiceOperation.swift */; };
+		DEF4E62B1D6C29970022992C /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEF4E62A1D6C29970022992C /* Constants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +50,9 @@
 		DEF4E6131D6C29160022992C /* AANetworkingUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AANetworkingUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DEF4E6171D6C29160022992C /* AANetworkingUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AANetworkingUITests.swift; sourceTree = "<group>"; };
 		DEF4E6191D6C29160022992C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DEF4E6261D6C298E0022992C /* WebServiceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebServiceManager.swift; sourceTree = "<group>"; };
+		DEF4E6271D6C298E0022992C /* WebServiceOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebServiceOperation.swift; sourceTree = "<group>"; };
+		DEF4E62A1D6C29970022992C /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +103,8 @@
 		DEF4E5F61D6C29160022992C /* AANetworking */ = {
 			isa = PBXGroup;
 			children = (
+				DEF4E62A1D6C29970022992C /* Constants.swift */,
+				DEF4E6251D6C29670022992C /* WebService */,
 				DEF4E5F71D6C29160022992C /* AppDelegate.swift */,
 				DEF4E5F91D6C29160022992C /* ViewController.swift */,
 				DEF4E5FB1D6C29160022992C /* Main.storyboard */,
@@ -123,6 +131,15 @@
 				DEF4E6191D6C29160022992C /* Info.plist */,
 			);
 			path = AANetworkingUITests;
+			sourceTree = "<group>";
+		};
+		DEF4E6251D6C29670022992C /* WebService */ = {
+			isa = PBXGroup;
+			children = (
+				DEF4E6261D6C298E0022992C /* WebServiceManager.swift */,
+				DEF4E6271D6C298E0022992C /* WebServiceOperation.swift */,
+			);
+			name = WebService;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -256,8 +273,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DEF4E62B1D6C29970022992C /* Constants.swift in Sources */,
+				DEF4E6291D6C298E0022992C /* WebServiceOperation.swift in Sources */,
 				DEF4E5FA1D6C29160022992C /* ViewController.swift in Sources */,
 				DEF4E5F81D6C29160022992C /* AppDelegate.swift in Sources */,
+				DEF4E6281D6C298E0022992C /* WebServiceManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
