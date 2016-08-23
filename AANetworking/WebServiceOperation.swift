@@ -25,12 +25,14 @@ final class WebServiceOperation : NSOperation {
     private var parse : WebRequestParser? = nil
     private var request: NSMutableURLRequest?
     private var completionHandler : WebRequestCompletionHandler? = nil
+    let webServiceManager = WebServiceManager ()
+    
     
     internal func load<A>(resource: Resource, completion: (A?) -> ()) {
         operationType = resource.operationType
         urlString = resource.urlString
         parse = resource.parse
-        
+        webServiceManager.addRequest(self)
     }
 }
 
