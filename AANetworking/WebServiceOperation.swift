@@ -8,29 +8,30 @@
 
 import Foundation
 
-typealias WebRequestCompletionHandler = ((AnyObject?, NSError?) -> Void)
-typealias WebRequestParser = ( (NSData) throws -> AnyObject?)
+typealias WebRequestCompletionHandler = ((Any?, NSError?) -> Void)
 
-struct Resource {
+struct Resource <A> {
     let urlString : String
     let operationType : OperationType
-    let parse : WebRequestParser
+    let parse : ( (NSData) throws -> Any?)
 }
-
 
 final class WebServiceOperation : NSOperation {
     
+    
+    static let sharedWebService = WebServiceOperation()
+    
     internal var operationType : OperationType? = nil
     private var urlString : String? = nil
-    private var parse : WebRequestParser? = nil
+    private var parse : ( (NSData) throws -> Any?)? = nil
     private var request: NSMutableURLRequest?
     private var completionHandler : WebRequestCompletionHandler? = nil
     let webServiceManager = WebServiceManager ()
     
-    
-    internal func load<A>(resource: Resource, completion: (A?) -> ()) {
+    internal func load<A>(resource: Resource<A>, completion:WebRequestCompletionHandler) {
         operationType = resource.operationType
         urlString = resource.urlString
+        completionHandler = completion
         parse = resource.parse
         webServiceManager.addRequest(self)
     }
@@ -39,7 +40,7 @@ final class WebServiceOperation : NSOperation {
 
 extension WebServiceOperation {
     internal override func main() {
-        func informCompletion(withData data: AnyObject?, error: NSError?) {
+        func informCompletion(withData data: Any?, error: NSError?) {
             dispatch_async(dispatch_get_main_queue() ) {
                 self.completionHandler? (data,error)
             }
@@ -85,7 +86,6 @@ extension WebServiceOperation {
             do {
                 // Try parsing the data
                 let result = try self.parse!(data!)
-                
                 // Return the result to the caller
                 informCompletion(withData: result, error: nil)
             } catch let parseError as NSError {
