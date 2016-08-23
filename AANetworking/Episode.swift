@@ -8,7 +8,6 @@
 
 import Foundation
 
-typealias JSONDictionary = [String : AnyObject]
 
 struct Movie {
     var overView : String!

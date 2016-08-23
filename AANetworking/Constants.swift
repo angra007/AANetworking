@@ -9,6 +9,13 @@
 import Foundation
 
 enum OperationType : String {
-    case listingDetails = "listingDetails"
+    case topRated = "topRatedMovies"
+    
+    var url : String {
+        switch self {
+        case .topRated:
+            return "http://api.themoviedb.org/3/movie/top_rated?api_key=4c989ba3813652e9f29d4dfd44bd34ad&&page=1"
+        }
+    }
 
 }

@@ -107,7 +107,8 @@
 		DEF4E5F61D6C29160022992C /* AANetworking */ = {
 			isa = PBXGroup;
 			children = (
-				DEF4E62A1D6C29970022992C /* Constants.swift */,
+				DEF694491D6CDD2400CDBB6D /* Utilities */,
+				DEF694481D6CDD0E00CDBB6D /* Model */,
 				DEF4E6251D6C29670022992C /* WebService */,
 				DEF4E5F71D6C29160022992C /* AppDelegate.swift */,
 				DEF4E5F91D6C29160022992C /* ViewController.swift */,
@@ -115,7 +116,6 @@
 				DEF4E5FE1D6C29160022992C /* Assets.xcassets */,
 				DEF4E6001D6C29160022992C /* LaunchScreen.storyboard */,
 				DEF4E6031D6C29160022992C /* Info.plist */,
-				DE2CB8E21D6C4A560070887B /* Episode.swift */,
 			);
 			path = AANetworking;
 			sourceTree = "<group>";
@@ -146,6 +146,22 @@
 				DE5C22981D6CA06B0093FBD1 /* WebRequeseResources.swift */,
 			);
 			name = WebService;
+			sourceTree = "<group>";
+		};
+		DEF694481D6CDD0E00CDBB6D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				DE2CB8E21D6C4A560070887B /* Episode.swift */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		DEF694491D6CDD2400CDBB6D /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				DEF4E62A1D6C29970022992C /* Constants.swift */,
+			);
+			name = Utilities;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

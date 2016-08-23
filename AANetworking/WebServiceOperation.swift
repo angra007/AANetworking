@@ -10,14 +10,7 @@ import Foundation
 
 typealias WebRequestCompletionHandler = ((Any?, NSError?) -> Void)
 
-struct Resource <A> {
-    let urlString : String
-    let operationType : OperationType
-    let parse : ( (NSData) throws -> Any?)
-}
-
 final class WebServiceOperation : NSOperation {
-    
     
     static let sharedWebService = WebServiceOperation()
     
@@ -36,7 +29,6 @@ final class WebServiceOperation : NSOperation {
         webServiceManager.addRequest(self)
     }
 }
-
 
 extension WebServiceOperation {
     internal override func main() {
