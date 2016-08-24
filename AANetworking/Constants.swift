@@ -8,13 +8,15 @@
 
 import Foundation
 
+let key : String = "9d933fe20c326fc20412d1cbb3d15102"
+
 enum OperationType : String {
     case topRated = "topRatedMovies"
     
     var url : String {
         switch self {
         case .topRated:
-            return "http://api.themoviedb.org/3/movie/top_rated?api_key=4c989ba3813652e9f29d4dfd44bd34ad&&page=1"
+            return "http://api.themoviedb.org/3/movie/top_rated?api_key=\(key)&&page=1"
         }
     }
 
