@@ -8,7 +8,7 @@
 
 import Foundation
 
-let key : String = "9d933fe20c326fc20412d1cbb3d15102"
+let key : String = ""
 
 enum OperationType : String {
     case topRated = "topRatedMovies"
