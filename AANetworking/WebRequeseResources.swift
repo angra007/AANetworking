@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 typealias JSONDictionary = [String : AnyObject]
 
@@ -16,14 +17,17 @@ struct Resource <A> {
     let parse : ( (NSData) throws -> Any?)
 }
 
+struct MediaResource <A> {
+    let urlString : String
+    let trackingID : String
+    let modificationDate : NSDate
+    let saveInCache : ( (NSData) throws -> Any?)
+}
+
 class WebRequestResources {
   
-    static let sharedRequestResource = WebRequestResources()
-    
-    func movieResource () -> Resource<[Movie]> {
-        
+    class func movieResource () -> Resource<[Movie]> {
         let type : OperationType = .topRated
-        
         let resource = Resource<[Movie]>(urlString: type.url ,operationType : type, parse: { data in
             let json = try? NSJSONSerialization.JSONObjectWithData(data, options: [])
             guard let dictionaries = json as? [String:AnyObject] else { return nil }
@@ -35,4 +39,11 @@ class WebRequestResources {
         return resource
     }
     
+    class func imageResource (urlString url:String,trackingID : String, modificationDate : NSDate) -> MediaResource<UIImage>  {
+        let resource = MediaResource<UIImage>(urlString: url, trackingID: trackingID, modificationDate: modificationDate, saveInCache: { (data) -> Any? in
+            // Save Image in Cache Here
+            return UIImage (data: data)
+        })
+        return resource
+    }
 }

@@ -12,20 +12,29 @@ typealias WebRequestCompletionHandler = ((Any?, NSError?) -> Void)
 
 final class WebServiceOperation : NSOperation {
     
-    static let sharedWebService = WebServiceOperation()
-    
     internal var operationType : OperationType? = nil
     private var urlString : String? = nil
-    private var parse : ( (NSData) throws -> Any?)? = nil
+    private var processDownloadedData : ( (NSData) throws -> Any?)? = nil
     private var request: NSMutableURLRequest?
     private var completionHandler : WebRequestCompletionHandler? = nil
     let webServiceManager = WebServiceManager ()
+    
+    class func instantiate () -> WebServiceOperation {
+        return WebServiceOperation()
+    }
     
     internal func load<A>(resource: Resource<A>, completion:WebRequestCompletionHandler) {
         operationType = resource.operationType
         urlString = resource.urlString
         completionHandler = completion
-        parse = resource.parse
+        processDownloadedData = resource.parse
+        webServiceManager.addRequest(self)
+    }
+    
+    internal func loadMedia <A> (resource : MediaResource<A>, completion:WebRequestCompletionHandler) {
+        urlString = resource.urlString
+        completionHandler = completion
+        processDownloadedData = resource.saveInCache
         webServiceManager.addRequest(self)
     }
 }
@@ -77,7 +86,7 @@ extension WebServiceOperation {
             
             do {
                 // Try parsing the data
-                let result = try self.parse!(data!)
+                let result = try self.processDownloadedData!(data!)
                 // Return the result to the caller
                 informCompletion(withData: result, error: nil)
             } catch let parseError as NSError {
