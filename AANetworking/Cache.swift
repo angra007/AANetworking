@@ -11,20 +11,20 @@ import Foundation
 class Cache : NSObject {
     
     static let sharedCache = Cache ()
-    let catchNameDictionary = [String:AnyObject]()
-    var path = ""
+    var catchNameDictionary = [String:AnyObject]()
+    var path : NSURL!
  
-    convenience init(name : String) {
+    convenience  init(type : CacheType) {
         self.init()
-        path = self.cachePath (withName : name)
+        path = self.cachePath (withName : type.rawValue)
     }
     
-    internal func data (forURL url:String, timestamp : NSDate) {
-        data(forKey:  key(forURL: url), timestamp: timestamp)
+    internal func data (forURL url:String, timestamp : NSDate) -> NSData? {
+        return data(forKey:  key(forURL: url), timestamp: timestamp)
     }
     
     internal func data (forKey key: String, timestamp : NSDate) -> NSData? {
-       let filePath = path + key
+       let filePath = path.URLByAppendingPathComponent(key).path!
         let fileManager = NSFileManager.defaultManager()
         if fileManager.fileExistsAtPath(filePath) {
             do {
@@ -33,11 +33,15 @@ class Cache : NSObject {
 
                 let dateComparisionResult:NSComparisonResult = (modified?.compare(timestamp))!
                 
-                if dateComparisionResult == NSComparisonResult.OrderedSame {
+                if dateComparisionResult == NSComparisonResult.OrderedSame ||  dateComparisionResult == NSComparisonResult.OrderedAscending {
                     do {
                         return try NSData(contentsOfFile: filePath, options: NSDataReadingOptions.DataReadingMappedAlways)
                     } catch let error as NSError {
                         print(error.localizedDescription)
+                        return nil
+                    }
+                    catch {
+                        print("Some Error")
                         return nil
                     }
                 }
@@ -50,10 +54,19 @@ class Cache : NSObject {
                         print(error.localizedDescription)
                         return nil
                      }
+                     catch {
+                         print("Some Error")
+                         return nil
+                    }
                  }
             } catch let error as NSError{
                 print(error.localizedDescription)
                 return nil
+            }
+            catch {
+                 print("Some Error")
+                return nil
+               
             }
         }
         else {
@@ -62,35 +75,27 @@ class Cache : NSObject {
     }
     
     internal func store (data:NSData?,forURL url:String, timestamp : NSDate) {
-        store(data, forKey: key(forURL: url), timestamp: timestamp)
+        
+        var pHash = key(forURL: url)
+        pHash = pHash.stringByReplacingOccurrencesOfString("/", withString: "")
+        
+        store(data, forKey: pHash, timestamp: timestamp)
     }
     
     internal func store (data:NSData?,forKey key:String, timestamp : NSDate) {
-        let filePath = path + key
+        let filePath =  path.URLByAppendingPathComponent(key).path!
         if let data = data {
             print(data.length)
-            // get your caches directory URL
-            let cachesDirectory = try! NSFileManager().URLForDirectory(.CachesDirectory, inDomain: .UserDomainMask, appropriateForURL: nil, create: true)
-            // create your local file url by appending your url last path component
-            let fileUrl = cachesDirectory.URLByAppendingPathComponent(filePath)
-            // save downloaded data to disk
-            
-             do {
-                try data.writeToURL(fileUrl, options: .DataWritingAtomic)
-             }
-             catch let error as NSError {
+            do {
+                    try data.writeToFile(filePath, options: .AtomicWrite)
+            } catch let error as NSError{
                 print(error.localizedDescription)
-             }
-            if data.writeToURL(fileUrl, atomically: true) {
-                print(true)
-                // load your saved image from disk
             }
-            
-        }
+         }
     }
     
     internal func removeDownloadedAssets(forURL url:String) {
-        let filePath = path + key(forURL: url)
+        let filePath = path.URLByAppendingPathComponent(key(forURL: url)).path!
         let fileManager = NSFileManager.defaultManager()
         if fileManager.fileExistsAtPath(filePath) {
            do {
@@ -98,6 +103,9 @@ class Cache : NSObject {
             }
            catch let error as NSError {
                 print(error.localizedDescription)
+            }
+           catch {
+                print("Some Error")
             }
         }
     }
@@ -121,11 +129,11 @@ class Cache : NSObject {
         return res
     }
     
-    private func cachePath (withName name: String) -> String {
+    private func cachePath (withName name: String) -> NSURL {
         let documentsURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0]
         let cachePath = documentsURL.URLByAppendingPathComponent(name)
         createPathIfNecessary(cachePath.path!)
-        return cachePath.path!
+        return cachePath
     }
     
     private func createPathIfNecessary (filePath:String) {
@@ -135,6 +143,9 @@ class Cache : NSObject {
                 try NSFileManager.defaultManager().createDirectoryAtPath(filePath, withIntermediateDirectories: false, attributes: nil)
             } catch let error as NSError {
                 print(error.localizedDescription)
+            }
+            catch {
+                print("Some Error")
             }
         }
     }

@@ -32,10 +32,19 @@ final class WebServiceOperation : NSOperation {
     }
     
     internal func loadMedia <A> (resource : MediaResource<A>, completion:WebRequestCompletionHandler) {
-        urlString = resource.urlString
-        completionHandler = completion
-        processDownloadedData = resource.saveInCache
-        webServiceManager.addRequest(self)
+        
+        let cache = Cache (type :.Asserts)
+        if let data = cache.data(forURL: resource.urlString, timestamp: resource.modificationDate) {
+            dispatch_async(dispatch_get_main_queue() ) {
+                self.completionHandler? (data,nil)
+            }
+        }
+        else {
+            urlString = resource.urlString
+            completionHandler = completion
+            processDownloadedData = resource.saveInCache
+            webServiceManager.addRequest(self)
+        }
     }
 }
 

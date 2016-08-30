@@ -19,30 +19,27 @@ struct Resource <A> {
 
 struct MediaResource <A> {
     let urlString : String
-    let trackingID : String
     let modificationDate : NSDate
     let saveInCache : ( (NSData) throws -> Any?)
 }
 
 class WebRequestResources {
   
-    class func movieResource () -> Resource<[Movie]> {
+    class func movieResource () -> Resource<[Any]> {
         let type : OperationType = .topRated
-        let resource = Resource<[Movie]>(urlString: type.url ,operationType : type, parse: { data in
-            let json = try? NSJSONSerialization.JSONObjectWithData(data, options: [])
-            guard let dictionaries = json as? [String:AnyObject] else { return nil }
-            guard let results : [AnyObject] = dictionaries["results"] as? [AnyObject] else { return nil }
-            return results.flatMap() {
-                Movie.init(movieDetails: $0 as! JSONDictionary)
-            }
+        let resource = Resource<[Any]>(urlString: type.url ,operationType : type, parse: { data in
+            // Parse your model object here and return parsed object
+            return data
         })
         return resource
     }
     
-    class func imageResource (urlString url:String,trackingID : String, modificationDate : NSDate) -> MediaResource<UIImage>  {
-        let resource = MediaResource<UIImage>(urlString: url, trackingID: trackingID, modificationDate: modificationDate, saveInCache: { (data) -> Any? in
+    class func imageResource (urlString url:String, modificationDate : NSDate) -> MediaResource<UIImage>  {
+        let resource = MediaResource<UIImage>(urlString: url, modificationDate: modificationDate, saveInCache: { (data) -> Any? in
             // Save Image in Cache Here
-            return UIImage (data: data)
+            let cache = Cache (type :.Asserts)
+            cache.store(data, forURL: url, timestamp: modificationDate)
+            return data
         })
         return resource
     }

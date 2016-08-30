@@ -10,14 +10,14 @@ import UIKit
 
 extension UIImageView {
     
-    internal func setImage (withURL url :String,fromDisk:Bool,modificationDate:NSDate,placeHolderImage : UIImage?,shouldShowActivityIndicator:Bool,trackID : String ) {
+    internal func setImage (withURL url :String,fromDisk:Bool,modificationDate:NSDate,placeHolderImage : UIImage?,shouldShowActivityIndicator:Bool) {
         self.image = placeHolderImage
        
         if shouldShowActivityIndicator {
             Spinner.sharedInstance.showSpinner(inView : self)
         }
         
-        let resource = WebRequestResources.imageResource(urlString : url,trackingID: trackID,modificationDate: modificationDate)
+        let resource = WebRequestResources.imageResource(urlString : url,modificationDate: modificationDate)
         
         
         WebServiceOperation.instantiate().loadMedia(resource) { (data, error) in
