@@ -9,8 +9,6 @@
 import Foundation
 import UIKit
 
-typealias JSONDictionary = [String : AnyObject]
-
 struct Resource <A> {
     let urlString : String
     let operationType : OperationType
@@ -23,13 +21,23 @@ struct MediaResource <A> {
     let saveInCache : ( (NSData) throws -> Any?)
 }
 
+// *************************************************** Example ***************************************************
+
+typealias JSONDictionary = [String : AnyObject]
+
 class WebRequestResources {
   
-    class func movieResource () -> Resource<[Any]> {
+    // Example 
+    class func movieResource () -> Resource<[Movie]> {
         let type : OperationType = .topRated
-        let resource = Resource<[Any]>(urlString: type.url ,operationType : type, parse: { data in
+        let resource = Resource<[Movie]>(urlString: type.url ,operationType : type, parse: { data in
             // Parse your model object here and return parsed object
-            return data
+            let json = try? NSJSONSerialization.JSONObjectWithData(data, options: [])
+            guard let dictionaries = json as? [String:AnyObject] else { return nil }
+            guard let results : [AnyObject] = dictionaries["results"] as? [AnyObject] else { return nil }
+            return results.flatMap() {
+                Movie.init(movieDetails: $0 as! JSONDictionary)
+            }
         })
         return resource
     }
@@ -44,3 +52,5 @@ class WebRequestResources {
         return resource
     }
 }
+
+// ******************************************************************************************************

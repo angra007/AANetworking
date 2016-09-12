@@ -28,7 +28,7 @@ final class WebServiceOperation : NSOperation {
         urlString = resource.urlString
         completionHandler = completion
         processDownloadedData = resource.parse
-        webServiceManager.addRequest(self)
+        webServiceManager.addRequest (self)
     }
     
     internal func loadMedia <A> (resource : MediaResource<A>, completion:WebRequestCompletionHandler) {

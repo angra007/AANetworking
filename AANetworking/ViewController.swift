@@ -13,6 +13,15 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        let movieResource = WebRequestResources.movieResource()
+        WebServiceOperation.instantiate().load(movieResource) { (data, error) in
+            guard let movie = (data as? [Movie]) else {
+                // Display Some Error
+                return }
+            print(movie)
+        }
+        
     }
 
     override func didReceiveMemoryWarning() {
