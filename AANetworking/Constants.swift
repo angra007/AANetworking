@@ -19,5 +19,8 @@ enum OperationType : String {
             return "http://api.themoviedb.org/3/movie/top_rated?api_key=\(key)&&page=1"
         }
     }
+}
 
+enum CacheType : String {
+    case Asserts = "AssetsCache"
 }
