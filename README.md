@@ -32,12 +32,14 @@ AANetworking is a network framework written in Swift 2.2. The original idea of t
             self.image = image
         }
   ```
-3. Saving in Caching 
+  
+  
+Saving in Caching 
 ```Swift
   let cache = Cache (type :.Asserts)
   cache.store(data, forURL: url, timestamp: modificationDate)
 ```
-4. Retriving from Cache
+Retriving from Cache
 ```Swift
   if let data = cache.data(forURL: resource.urlString, timestamp: resource.modificationDate) {
       // You have a Cached data 
