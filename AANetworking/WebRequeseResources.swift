@@ -21,36 +21,6 @@ struct MediaResource <A> {
     let saveInCache : ( (NSData) throws -> Any?)
 }
 
-// *************************************************** Example ***************************************************
 
-typealias JSONDictionary = [String : AnyObject]
 
-class WebRequestResources {
-  
-    // Example 
-    class func movieResource () -> Resource<[Movie]> {
-        let type : OperationType = .topRated
-        let resource = Resource<[Movie]>(urlString: type.url ,operationType : type, parse: { data in
-            // Parse your model object here and return parsed object
-            let json = try? NSJSONSerialization.JSONObjectWithData(data, options: [])
-            guard let dictionaries = json as? [String:AnyObject] else { return nil }
-            guard let results : [AnyObject] = dictionaries["results"] as? [AnyObject] else { return nil }
-            return results.flatMap() {
-                Movie.init(movieDetails: $0 as! JSONDictionary)
-            }
-        })
-        return resource
-    }
-    
-    class func imageResource (urlString url:String, modificationDate : NSDate) -> MediaResource<UIImage>  {
-        let resource = MediaResource<UIImage>(urlString: url, modificationDate: modificationDate, saveInCache: { (data) -> Any? in
-            // Save Image in Cache Here
-            let cache = Cache (type :.Asserts)
-            cache.store(data, forURL: url, timestamp: modificationDate)
-            return data
-        })
-        return resource
-    }
-}
 
-// ******************************************************************************************************
