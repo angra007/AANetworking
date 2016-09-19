@@ -7,19 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		DE1BB0301D8694F900E8A814 /* Episode.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE1BB02F1D8694F900E8A814 /* Episode.swift */; };
-		DE5C22991D6CA06B0093FBD1 /* WebRequeseResources.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5C22981D6CA06B0093FBD1 /* WebRequeseResources.swift */; };
-		DED0183D1D745C11009311D2 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = DED0183C1D745C11009311D2 /* Cache.swift */; };
-		DEF4E5F81D6C29160022992C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEF4E5F71D6C29160022992C /* AppDelegate.swift */; };
-		DEF4E5FA1D6C29160022992C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEF4E5F91D6C29160022992C /* ViewController.swift */; };
+		DE5096D21D8F7FE80002196A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5096D01D8F7FE80002196A /* AppDelegate.swift */; };
+		DE5096D31D8F7FE80002196A /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DE5096D11D8F7FE80002196A /* Info.plist */; };
+		DE5096D51D8F80220002196A /* Episode.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5096D41D8F80220002196A /* Episode.swift */; };
+		DE5096D71D8F802B0002196A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5096D61D8F802B0002196A /* ViewController.swift */; };
+		DE5096DB1D8F80660002196A /* WebRequeseResources.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5096D81D8F80650002196A /* WebRequeseResources.swift */; };
+		DE5096DC1D8F80660002196A /* WebServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5096D91D8F80650002196A /* WebServiceManager.swift */; };
+		DE5096DD1D8F80660002196A /* WebServiceOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5096DA1D8F80650002196A /* WebServiceOperation.swift */; };
+		DE5096DF1D8F80770002196A /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5096DE1D8F80770002196A /* Cache.swift */; };
+		DE5096E11D8F808E0002196A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5096E01D8F808E0002196A /* Constants.swift */; };
 		DEF4E5FD1D6C29160022992C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DEF4E5FB1D6C29160022992C /* Main.storyboard */; };
 		DEF4E5FF1D6C29160022992C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DEF4E5FE1D6C29160022992C /* Assets.xcassets */; };
 		DEF4E6021D6C29160022992C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DEF4E6001D6C29160022992C /* LaunchScreen.storyboard */; };
 		DEF4E60D1D6C29160022992C /* AANetworkingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEF4E60C1D6C29160022992C /* AANetworkingTests.swift */; };
 		DEF4E6181D6C29160022992C /* AANetworkingUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEF4E6171D6C29160022992C /* AANetworkingUITests.swift */; };
-		DEF4E6281D6C298E0022992C /* WebServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEF4E6261D6C298E0022992C /* WebServiceManager.swift */; };
-		DEF4E6291D6C298E0022992C /* WebServiceOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEF4E6271D6C298E0022992C /* WebServiceOperation.swift */; };
-		DEF4E62B1D6C29970022992C /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEF4E62A1D6C29970022992C /* Constants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,26 +41,26 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		DE1BB02F1D8694F900E8A814 /* Episode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Episode.swift; sourceTree = "<group>"; };
-		DE5C22981D6CA06B0093FBD1 /* WebRequeseResources.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebRequeseResources.swift; sourceTree = "<group>"; };
-		DED0183C1D745C11009311D2 /* Cache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
+		DE5096D01D8F7FE80002196A /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Root/AppDelegate.swift; sourceTree = "<group>"; };
+		DE5096D11D8F7FE80002196A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Root/Info.plist; sourceTree = "<group>"; };
+		DE5096D41D8F80220002196A /* Episode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Episode.swift; path = AANetworking/Example/Model/Episode.swift; sourceTree = "<group>"; };
+		DE5096D61D8F802B0002196A /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ViewController.swift; path = AANetworking/Example/Controller/ViewController.swift; sourceTree = "<group>"; };
+		DE5096D81D8F80650002196A /* WebRequeseResources.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebRequeseResources.swift; path = WebService/WebRequeseResources.swift; sourceTree = "<group>"; };
+		DE5096D91D8F80650002196A /* WebServiceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebServiceManager.swift; path = WebService/WebServiceManager.swift; sourceTree = "<group>"; };
+		DE5096DA1D8F80650002196A /* WebServiceOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebServiceOperation.swift; path = WebService/WebServiceOperation.swift; sourceTree = "<group>"; };
+		DE5096DE1D8F80770002196A /* Cache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Cache.swift; path = Cache/Cache.swift; sourceTree = "<group>"; };
+		DE5096E01D8F808E0002196A /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Constants.swift; path = Utility/Constants.swift; sourceTree = "<group>"; };
 		DED0183E1D745EF8009311D2 /* AANetworking-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AANetworking-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
 		DEF4E5F41D6C29160022992C /* AANetworking.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AANetworking.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		DEF4E5F71D6C29160022992C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		DEF4E5F91D6C29160022992C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ViewController.swift; path = AANetworking/ViewController.swift; sourceTree = "<group>"; };
 		DEF4E5FC1D6C29160022992C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		DEF4E5FE1D6C29160022992C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DEF4E6011D6C29160022992C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		DEF4E6031D6C29160022992C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DEF4E6081D6C29160022992C /* AANetworkingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AANetworkingTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DEF4E60C1D6C29160022992C /* AANetworkingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AANetworkingTests.swift; sourceTree = "<group>"; };
 		DEF4E60E1D6C29160022992C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DEF4E6131D6C29160022992C /* AANetworkingUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AANetworkingUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DEF4E6171D6C29160022992C /* AANetworkingUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AANetworkingUITests.swift; sourceTree = "<group>"; };
 		DEF4E6191D6C29160022992C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		DEF4E6261D6C298E0022992C /* WebServiceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebServiceManager.swift; sourceTree = "<group>"; };
-		DEF4E6271D6C298E0022992C /* WebServiceOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebServiceOperation.swift; sourceTree = "<group>"; };
-		DEF4E62A1D6C29970022992C /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,7 +101,7 @@
 		DE1BB0311D86952E00E8A814 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				DE1BB02F1D8694F900E8A814 /* Episode.swift */,
+				DE5096D41D8F80220002196A /* Episode.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -108,7 +109,7 @@
 		DE1BB0321D86968D00E8A814 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				DEF4E5F91D6C29160022992C /* ViewController.swift */,
+				DE5096D61D8F802B0002196A /* ViewController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -116,7 +117,7 @@
 		DED0183B1D745C00009311D2 /* Cache */ = {
 			isa = PBXGroup;
 			children = (
-				DED0183C1D745C11009311D2 /* Cache.swift */,
+				DE5096DE1D8F80770002196A /* Cache.swift */,
 			);
 			name = Cache;
 			path = AANetworking;
@@ -149,10 +150,10 @@
 		DEF4E5F61D6C29160022992C /* Root */ = {
 			isa = PBXGroup;
 			children = (
-				DEF4E5F71D6C29160022992C /* AppDelegate.swift */,
+				DE5096D01D8F7FE80002196A /* AppDelegate.swift */,
+				DE5096D11D8F7FE80002196A /* Info.plist */,
 				DEF4E5FE1D6C29160022992C /* Assets.xcassets */,
 				DEF4E6001D6C29160022992C /* LaunchScreen.storyboard */,
-				DEF4E6031D6C29160022992C /* Info.plist */,
 				DED0183E1D745EF8009311D2 /* AANetworking-Bridging-Header.h */,
 			);
 			name = Root;
@@ -180,9 +181,9 @@
 		DEF4E6251D6C29670022992C /* WebService */ = {
 			isa = PBXGroup;
 			children = (
-				DEF4E6261D6C298E0022992C /* WebServiceManager.swift */,
-				DEF4E6271D6C298E0022992C /* WebServiceOperation.swift */,
-				DE5C22981D6CA06B0093FBD1 /* WebRequeseResources.swift */,
+				DE5096D81D8F80650002196A /* WebRequeseResources.swift */,
+				DE5096D91D8F80650002196A /* WebServiceManager.swift */,
+				DE5096DA1D8F80650002196A /* WebServiceOperation.swift */,
 			);
 			name = WebService;
 			path = AANetworking;
@@ -191,7 +192,7 @@
 		DEF694491D6CDD2400CDBB6D /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				DEF4E62A1D6C29970022992C /* Constants.swift */,
+				DE5096E01D8F808E0002196A /* Constants.swift */,
 			);
 			name = Utilities;
 			path = AANetworking;
@@ -301,6 +302,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DE5096D31D8F7FE80002196A /* Info.plist in Resources */,
 				DEF4E6021D6C29160022992C /* LaunchScreen.storyboard in Resources */,
 				DEF4E5FF1D6C29160022992C /* Assets.xcassets in Resources */,
 				DEF4E5FD1D6C29160022992C /* Main.storyboard in Resources */,
@@ -328,14 +330,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DEF4E62B1D6C29970022992C /* Constants.swift in Sources */,
-				DEF4E6291D6C298E0022992C /* WebServiceOperation.swift in Sources */,
-				DE1BB0301D8694F900E8A814 /* Episode.swift in Sources */,
-				DEF4E5FA1D6C29160022992C /* ViewController.swift in Sources */,
-				DE5C22991D6CA06B0093FBD1 /* WebRequeseResources.swift in Sources */,
-				DED0183D1D745C11009311D2 /* Cache.swift in Sources */,
-				DEF4E5F81D6C29160022992C /* AppDelegate.swift in Sources */,
-				DEF4E6281D6C298E0022992C /* WebServiceManager.swift in Sources */,
+				DE5096D21D8F7FE80002196A /* AppDelegate.swift in Sources */,
+				DE5096DC1D8F80660002196A /* WebServiceManager.swift in Sources */,
+				DE5096DF1D8F80770002196A /* Cache.swift in Sources */,
+				DE5096D51D8F80220002196A /* Episode.swift in Sources */,
+				DE5096DD1D8F80660002196A /* WebServiceOperation.swift in Sources */,
+				DE5096D71D8F802B0002196A /* ViewController.swift in Sources */,
+				DE5096DB1D8F80660002196A /* WebRequeseResources.swift in Sources */,
+				DE5096E11D8F808E0002196A /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
