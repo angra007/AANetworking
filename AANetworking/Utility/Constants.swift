@@ -24,3 +24,16 @@ enum OperationType : String {
 enum CacheType : String {
     case Asserts = "AssetsCache"
 }
+
+
+enum RequestHeaderFieldType  : Int {
+    case None = 0
+    case ApplicationURLEncoded = 1
+    case ApplicationJSON = 2
+    case ApplicationMultipart = 3
+}
+
+enum RequestType {
+    case GET
+    case POST
+}

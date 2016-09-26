@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DE230A2D1D99018200571BDB /* WebRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE230A2C1D99018200571BDB /* WebRequest.swift */; };
 		DE5096D21D8F7FE80002196A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5096D01D8F7FE80002196A /* AppDelegate.swift */; };
 		DE5096D31D8F7FE80002196A /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DE5096D11D8F7FE80002196A /* Info.plist */; };
 		DE5096D51D8F80220002196A /* Episode.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5096D41D8F80220002196A /* Episode.swift */; };
@@ -41,6 +42,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		DE230A2C1D99018200571BDB /* WebRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebRequest.swift; path = WebService/WebRequest.swift; sourceTree = "<group>"; };
 		DE5096D01D8F7FE80002196A /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Root/AppDelegate.swift; sourceTree = "<group>"; };
 		DE5096D11D8F7FE80002196A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Root/Info.plist; sourceTree = "<group>"; };
 		DE5096D41D8F80220002196A /* Episode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Episode.swift; path = AANetworking/Example/Model/Episode.swift; sourceTree = "<group>"; };
@@ -184,6 +186,7 @@
 				DE5096D81D8F80650002196A /* WebRequeseResources.swift */,
 				DE5096D91D8F80650002196A /* WebServiceManager.swift */,
 				DE5096DA1D8F80650002196A /* WebServiceOperation.swift */,
+				DE230A2C1D99018200571BDB /* WebRequest.swift */,
 			);
 			name = WebService;
 			path = AANetworking;
@@ -330,6 +333,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DE230A2D1D99018200571BDB /* WebRequest.swift in Sources */,
 				DE5096D21D8F7FE80002196A /* AppDelegate.swift in Sources */,
 				DE5096DC1D8F80660002196A /* WebServiceManager.swift in Sources */,
 				DE5096DF1D8F80770002196A /* Cache.swift in Sources */,

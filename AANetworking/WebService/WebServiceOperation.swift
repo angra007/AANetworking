@@ -8,16 +8,17 @@
 
 import Foundation
 
-typealias WebRequestCompletionHandler = ((Any?, NSError?) -> Void)
-
 final class WebServiceOperation : NSOperation {
     
     internal var operationType : OperationType? = nil
+    let webServiceManager = WebServiceManager ()
     private var urlString : String? = nil
-    private var processDownloadedData : ( (NSData) throws -> Any?)? = nil
+    private var processDownloadedData : ProcessDownloadCompletionHandler? = nil
     private var request: NSMutableURLRequest?
     private var completionHandler : WebRequestCompletionHandler? = nil
-    let webServiceManager = WebServiceManager ()
+    private var postData : NSData?
+    private var type : RequestType?
+    private var headerType : RequestHeaderFieldType?
     
     class func instantiate () -> WebServiceOperation {
         return WebServiceOperation()
@@ -26,6 +27,9 @@ final class WebServiceOperation : NSOperation {
     internal func load<A>(resource: Resource<A>, completion:WebRequestCompletionHandler) {
         operationType = resource.operationType
         urlString = resource.urlString
+        postData = resource.data
+        type = resource.requestType
+        headerType = resource.headerType
         completionHandler = completion
         processDownloadedData = resource.parse
         webServiceManager.addRequest (self)
@@ -50,9 +54,9 @@ final class WebServiceOperation : NSOperation {
 
 extension WebServiceOperation {
     internal override func main() {
-        func informCompletion(withData data: Any?, error: NSError?) {
+        func informCompletion(withData data: AnyObject?, error: NSError?) {
             dispatch_async(dispatch_get_main_queue() ) {
-                self.completionHandler? (data,error)
+                (self.completionHandler? (data,error))!
             }
         }
         
@@ -76,36 +80,39 @@ extension WebServiceOperation {
             return
         }
         
-        NSURLSession.sharedSession().dataTaskWithRequest(self.request!) { (data, response, error) in
-            if error != nil {
-                informCompletion(withData: nil, error: error)
-                return
+        if self.type == .GET {
+            WebRequest.instantiate().getRequest(url!, completion: { (data, error) in
+                if error != nil {
+                    informCompletion(withData: nil, error: error)
+                }
+                else
+                {
+                    let result =  self.processDownloadedData!(data!)
+                    // 500,501,1000
+                    informCompletion(withData: result, error: nil)
+                }
+            })
+        }
+        else {
+            WebRequest.instantiate().postRequest(withData: postData!, url: url!, headerType: headerType!) { (data, error) in
+                
+                if error != nil {
+                    informCompletion(withData: nil, error: error)
+                }
+                else
+                {
+                    let result =  self.processDownloadedData!(data!)
+                    // 500,501,1000
+                    informCompletion(withData: result, error: nil)
+                }
             }
-            
-            // If cancelled, return immediately informing the requester.
-            if self.cancelled {
-                informCompletion(withData: nil, error: nil)
-                return
-            }
-            
-            if data == nil {
-                informCompletion(withData: nil, error: nil)
-                return
-            }
-            
-            do {
-                // Try parsing the data
-                let result = try self.processDownloadedData!(data!)
-                // Return the result to the caller
-                informCompletion(withData: result, error: nil)
-            } catch let parseError as NSError {
-                informCompletion(withData: nil, error: parseError)
-            } catch {
-                // TODO: Prepare a specific error and return
-                informCompletion(withData: nil, error: nil)
-            }
-
-        }.resume()
-        
+        }
     }
 }
+
+
+
+
+
+
+
