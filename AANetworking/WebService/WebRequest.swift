@@ -58,7 +58,7 @@ class WebRequest {
         self.sendRequest()
     }
     
-    func getRequest (url : NSURL, completion:((AnyObject?, NSError?,Bool) -> Void)) {
+    func getRequest (url : NSURL, completion: WebRequestorCompletionHandler) {
         let sessionID = ""
         completionHandler = completion
         request =  NSMutableURLRequest.init(URL: url, cachePolicy: .ReloadIgnoringLocalAndRemoteCacheData, timeoutInterval: timeOut)

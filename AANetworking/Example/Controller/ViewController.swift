@@ -41,7 +41,6 @@ class WebRequestResources {
         let type : OperationType = .topRated
         let resource = Resource<[Movie]>   (urlString: type.url ,operationType : type, parse: { dictionaries in
             guard let results : [AnyObject] = dictionaries["results"] as? [AnyObject] else { return nil }
-            print(results)
             return results;
         })
         return resource

@@ -64,40 +64,75 @@ extension WebServiceOperation {
             return
         }
         
+        
         if self.loadRequestType == .JSON {
             let JSONRequest = JSONRequestor ()
-            JSONRequest.timeOut = 60 *  Double ((self.retryCount + 1))
             
-            // No Network Condition
-            
-            if self.requestType == .GET {
-                JSONRequest.getRequest(url!, completion: { (data, error,shouldRetry) in
-                })
+            func retry () {
+                retryCount = retryCount + 1
+                load()
             }
-            else if self.requestType == .POST {
-                JSONRequest.postRequest(withData: postData!, url: url!, headerType: headerType!) { (data, error,shouldRetry) in
+            
+            func load () {
+                JSONRequest.timeOut = 60 *  Double ((self.retryCount + 1))
+                
+                 // No Network Condition Here
+                
+                if self.requestType == .GET {
+                    JSONRequest.getRequest(url!, completion: { (result, error,shouldRetry) in
+                        
+                        if shouldRetry == true && self.retryCount < 2 {
+                            retry()
+                        }
+                        else {
+                            self.handleDownloadCompletion(result, error: error)
+                        }
+                        
+                    })
+                }
+                else if self.requestType == .POST {
+                    JSONRequest.postRequest(withData: postData!, url: url!, headerType: headerType!,completion:  { (result, error,shouldRetry) in
+                        
+                        if shouldRetry == true && self.retryCount < 2 {
+                            retry()
+                        }
+                        else {
+                            self.handleDownloadCompletion(result, error: error)
+                        }
+                    })
                 }
             }
-            else {
-                
-            }
+            
+            load()
         }
      }
     
-    func informCompletion(withData data: AnyObject?, error: NSError?) {
+    func informCompletion(withData result: AnyObject?, error: NSError?) {
         dispatch_async(dispatch_get_main_queue() ) {
-            (self.completionHandler? (data,error))!
+            (self.completionHandler? (result,error))!
+        }
+    }
+    
+    func handleDownloadCompletion (result : AnyObject?, error : NSError?) {
+       
+        if error != nil {
+            // Send the log here
+            if error!.code != -97 {
+                self.informCompletion(withData: nil, error: error!)
+                return
+            }
+        }
+        
+        if result != nil {
+            // Fill Model
+            let object = self.processDownloadedData?(result!)
+            
+            // Pass the model object back
+            self.informCompletion(withData: object, error: nil)
         }
     }
 }
 
-extension WebServiceOperation {
-    func retry() {
-        retryCount = retryCount + 1
-        webServiceManager.cancelOperationWithOperationType(self.operationType!)
-        webServiceManager.addRequest(self)
-    }
-}
 
 
 

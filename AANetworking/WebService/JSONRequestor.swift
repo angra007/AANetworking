@@ -17,6 +17,7 @@ class JSONRequestor : WebRequest {
             self.errorLogString.appendString("Time spent in request \(String(self.requestURL!)) is \(timeSpent)\n")
             let result = self.validateYourself(data, error: error)
             print (self.errorLogString)
+            // Saving Log
             self.informCompletion(withData: result.data, error: result.error , shouldRetry: result.shouldRetry)
         }.resume()
     }
@@ -62,7 +63,16 @@ class JSONRequestor : WebRequest {
             return (nil,dataError,false)
         }
         
-        return (dictionaries,nil,false)
+        guard let results : [String:AnyObject] = dictionaries["data"] as? [String:AnyObject] else { return (dictionaries,nil,true) }
+        guard let status : String = results["status"] as? String else {return (dictionaries,nil,false)}
+        
+        if status == "500" || status == "501" || status == "1000" {
+            let invalidRequestError =  NSError (domain: "JSONError",code: -97,userInfo: [NSLocalizedDescriptionKey: "Request is Invalid"])
+            return (dictionaries,invalidRequestError,false)
+        }
+        else {
+            return (dictionaries,nil,false)
+        }
     }
 }
 
