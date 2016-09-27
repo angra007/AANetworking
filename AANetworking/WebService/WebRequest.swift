@@ -24,10 +24,77 @@ class WebRequest {
         NSURLSession.sharedSession().dataTaskWithRequest(self.request!) { (data, response, error) in
             let timeSpent = NSDate.timeIntervalSinceDate(self.startDate)
             print(timeSpent)
-            }.resume()
+            
+            let result = self.validateYourself(data, error: error)
+            if result.error != nil {
+                self.informCompletion(withData: result.data, error: result.error, shouldRetry: result.shouldRetry)
+            }
+            else {
+                let validator = self.handleInvalidResponseFromServer(result.data!)
+                print(self.errorLogString)
+                self.informCompletion(withData: result.data, error: validator.error, shouldRetry: validator.shouldRetry)
+            }
+        }.resume()
     }
     
-    func postRequest (withData data: NSData, url : NSURL, headerType :RequestHeaderFieldType, completion:WebRequestorCompletionHandler) {
+    /**
+        This method has to be implemented by the base class to handle any kind of Invalid Response. 
+        @param response : Any Valid JSON From Server
+        
+        @return
+        error : Custom Error due to response
+        shouldRetry : Whether the request should go again
+    */
+    func handleInvalidResponseFromServer (response : JSONDictionary) -> (error : NSError?,shouldRetry : Bool) {
+        // Competion Handler
+        return (nil,false)
+    }
+    
+    
+    func validateYourself (data : NSData?, error : NSError?) -> (data : JSONDictionary?,error : NSError?,shouldRetry : Bool)  {
+        func validateJSON (withData data : NSData) throws -> AnyObject {
+            let json = try? NSJSONSerialization.JSONObjectWithData(data, options: [])
+            return json!
+        }
+        
+        if error != nil {
+            self.errorLogString.appendString ("*******************\n")
+            self.errorLogString.appendString("Connection failed for request = \(String(self.requestURL!))\n")
+            self.errorLogString.appendString("Connection failed for Error = \(error?.localizedDescription)\n")
+            self.errorLogString.appendString ("*******************\n")
+            return (nil,error,true)
+        }
+        
+        if data == nil {
+            self.errorLogString.appendString ("Response is Nil\n")
+            self.errorLogString.appendString ("*******************\n")
+            self.errorLogString.appendString ("Response for URL \(String(self.requestURL!)) is NULL \n")
+            let dataError =  NSError (domain: "NoDataAvailable",code: -99,userInfo: [NSLocalizedDescriptionKey: "No data available"])
+            return (nil,dataError,true)
+        }
+        
+        let response : AnyObject
+        
+        do {
+            let json = try validateJSON (withData: data!)
+            response = json
+            self.errorLogString.appendString ("Response for URL \(String(self.requestURL!)) is \(json) \n")
+        }
+        catch let error as NSError {
+            response = NSString(data: data!, encoding: NSUTF8StringEncoding)!
+            self.errorLogString.appendString("\n\n ######************JSON Parser error in the response - *******#######\n\n\(String(response)) \n\n")
+            return (nil,error,false)
+        }
+        
+        guard let dictionaries = response as? JSONDictionary else {
+            let dataError =  NSError (domain: "JSONError",code: -98,userInfo: [NSLocalizedDescriptionKey: "Invalid JSON Received"])
+            return (nil,dataError,false)
+        }
+        
+        return (dictionaries,nil,false)
+    }
+    
+    func postRequest (withData data: NSData, url : NSURL, contentType :RequestContentType, completion:WebRequestorCompletionHandler) {
         let sessionID = ""
         //let privateKey = "lmnop"
         completionHandler = completion
@@ -35,12 +102,12 @@ class WebRequest {
         request?.HTTPMethod = "POST"
         request?.setValue(String(data.length), forHTTPHeaderField: "Content-Length")
         var headerContentType : String
-        switch  headerType {
-        case .ApplicationURLEncoded :
+        switch  contentType {
+        case .URLEncoded :
             headerContentType = "application/x-www-form-urlencoded"
-        case .ApplicationJSON :
+        case .JSON :
             headerContentType = "application/json"
-        case .ApplicationMultipart:
+        case .Multipart:
              headerContentType = "multipart/form-data; boundary=" + multipartBoundary
         default:
             headerContentType = "application/x-www-form-urlencoded"
@@ -76,7 +143,13 @@ class WebRequest {
     }
 }
 
-
+extension WebRequest {
+    func informCompletion(withData data: JSONDictionary?, error: NSError?,shouldRetry : Bool) {
+        dispatch_async(dispatch_get_main_queue() ) {
+            self.completionHandler? (data,error,shouldRetry)
+        }
+    }
+}
 
 
 

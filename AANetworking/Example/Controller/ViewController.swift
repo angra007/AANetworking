@@ -30,16 +30,10 @@ class ViewController: UIViewController {
     }
 }
 
-
-
-typealias JSONDictionary = [String : AnyObject]
-
 class WebRequestResources {
     
-
     class func movieResource () -> Resource<[Movie]> {
-        let type : OperationType = .topRated
-        let resource = Resource<[Movie]>   (urlString: type.url ,operationType : type, parse: { dictionaries in
+        let resource = Resource<[Movie]>   (operationType : .topRated, parse: { dictionaries in
             guard let results : [AnyObject] = dictionaries["results"] as? [AnyObject] else { return nil }
             return results;
         })
@@ -48,26 +42,6 @@ class WebRequestResources {
     
 }
 
-class Spinner : UIView {
-    
-    let activityIndicater  = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
-    
-    internal static let sharedInstance = Spinner ()
-    
-    func showSpinner(inView sourceView:UIView) {
-        activityIndicater.hidesWhenStopped = true
-        sourceView.addSubview(activityIndicater)
-        var center = sourceView.center
-        center.x = sourceView.center.x - sourceView.frame.origin.x;
-        center.y = sourceView.center.y - sourceView.frame.origin.y;
-        activityIndicater.center = center
-        activityIndicater.startAnimating()
-    }
-    
-    func hideSpinner(inView sourceView:UIView) {
-        activityIndicater.removeFromSuperview()
-        activityIndicater.stopAnimating()
-    }
-}
+
 
 

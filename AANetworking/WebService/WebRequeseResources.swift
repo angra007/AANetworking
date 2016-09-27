@@ -7,45 +7,42 @@
 //
 
 import Foundation
-import UIKit
 
+// All the request will be of this Resource type. This would act as a data structure for all the type of request's. 
+// Everything need to define a request will go inside this Resource
 struct Resource <A> {
     let urlString : String
     let operationType : OperationType
-    let requestType : RequestType
-    let headerType : RequestHeaderFieldType
+    let methodType : RequestMethodType
+    let contentType : RequestContentType
     let data : NSData?
     let parse : ProcessDownloadCompletionHandler
 }
 
+// Initilizers are given in a extension so that we still have the default initilizer around if in case we need it.
 extension Resource {
     
     // GET Request Initilizer
-    init (urlString : String, operationType : OperationType, parse : ProcessDownloadCompletionHandler) {
-        self.urlString = urlString
+    init (operationType : OperationType, parse : ProcessDownloadCompletionHandler) {
+        self.urlString = operationType.url
         self.operationType = operationType
-        self.requestType = .GET
-        self.headerType = .None
+        self.methodType = .GET
+        self.contentType = .URLEncoded
         self.data = nil
         self.parse = parse
     }
     
     // POST Request Initilizer
-    init (urlString : String, operationType : OperationType, headerType : RequestHeaderFieldType, postData : NSData, parse : ProcessDownloadCompletionHandler ) {
-        self.urlString = urlString
+    init (operationType : OperationType, contentType : RequestContentType, postData : NSData, parse : ProcessDownloadCompletionHandler ) {
+        self.urlString = operationType.url
         self.operationType = operationType
-        self.requestType = .POST
-        self.headerType = headerType
+        self.methodType = .POST
+        self.contentType = contentType
         self.data = postData
         self.parse = parse
     }
 }
 
-struct MediaResource <A> {
-    let urlString : String
-    let modificationDate : NSDate
-    let saveInCache : ( (NSData) -> AnyObject?)
-}
 
 
 

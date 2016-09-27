@@ -10,53 +10,55 @@ import Foundation
 
 final class WebServiceOperation : NSOperation {
     
-    internal var operationType : OperationType? = nil
-    private let webServiceManager = WebServiceManager ()
-    private var urlString : String? = nil
-    private var processDownloadedData : ProcessDownloadCompletionHandler? = nil
-    private var request: NSMutableURLRequest?
-    private var completionHandler : WebServiceCompletionHandler? = nil
+    internal var operationType : OperationType? 
     private var postData : NSData?
-    private var requestType : RequestType?
-    private var headerType : RequestHeaderFieldType?
+    private var completionHandler : WebServiceCompletionHandler?
+    private var processDownloadedData : ProcessDownloadCompletionHandler?
+    private var methodType : RequestMethodType?
+    private var contentType : RequestContentType?
     private var retryCount = 0
-    private var loadRequestType : LoadRequestType = .None
-    
+    private let maximunNumberOfRetry = 3
     class func instantiate () -> WebServiceOperation {
         return WebServiceOperation()
     }
 }
 
 extension WebServiceOperation {
+    
+    /**
+        This the method which is main method responsible to download JSON from server. As this is in NSOperation class it adds itself to the 
+        requestQueue. All the elements which are required to download are passed in Struct Resource. These elements are saved locally so that 
+        they can be used later.
+        @param resource : This is the download resource. This will contain all the information to fetch data.
+        completion : This is the completion Handler which will be called once we have some data or a error
+    */
     func loadJSON<A>(resource: Resource<A>, completion:WebServiceCompletionHandler) {
-        loadRequestType = .JSON
         operationType = resource.operationType
-        urlString = resource.urlString
         postData = resource.data
-        requestType = resource.requestType
-        headerType = resource.headerType
+        methodType = resource.methodType
+        contentType = resource.contentType
         completionHandler = completion
         processDownloadedData = resource.parse
-        webServiceManager.addRequest (self)
+        WebServiceManager.sharedManager.addRequest (self)
     }
 }
 
 extension WebServiceOperation {
     internal override func main() {
         
+        // If cancelled, return immediately informing the requester.
         if self.cancelled {
             informCompletion(withData: nil, error: nil)
             return
         }
         
-        let urlString = self.urlString
+        // URL Validation
+        let urlString = self.operationType?.url
         guard !urlString!.isEmpty else {
             informCompletion(withData: nil, error: nil)
             return
         }
-        
         let url = NSURL.init(string: urlString!)
-        self.request = NSMutableURLRequest.init(URL: url!)
     
         // If cancelled, return immediately informing the requester.
         if self.cancelled {
@@ -64,10 +66,11 @@ extension WebServiceOperation {
             return
         }
         
-        
-        if self.loadRequestType == .JSON {
+        // This is to support GET and POST
+        if (self.contentType == .URLEncoded || self.contentType == .JSON)  {
             let JSONRequest = JSONRequestor ()
             
+            // Method responsible to retry the request
             func retry () {
                 retryCount = retryCount + 1
                 load()
@@ -78,10 +81,10 @@ extension WebServiceOperation {
                 
                  // No Network Condition Here
                 
-                if self.requestType == .GET {
+                if self.methodType == .GET {
                     JSONRequest.getRequest(url!, completion: { (result, error,shouldRetry) in
                         
-                        if shouldRetry == true && self.retryCount < 2 {
+                        if shouldRetry == true && self.retryCount < (self.maximunNumberOfRetry - 1) {
                             retry()
                         }
                         else {
@@ -90,10 +93,10 @@ extension WebServiceOperation {
                         
                     })
                 }
-                else if self.requestType == .POST {
-                    JSONRequest.postRequest(withData: postData!, url: url!, headerType: headerType!,completion:  { (result, error,shouldRetry) in
+                else if self.methodType == .POST {
+                    JSONRequest.postRequest(withData: postData!, url: url!, contentType: contentType!,completion:  { (result, error,shouldRetry) in
                         
-                        if shouldRetry == true && self.retryCount < 2 {
+                        if shouldRetry == true && self.retryCount < (self.maximunNumberOfRetry - 1) {
                             retry()
                         }
                         else {
@@ -102,7 +105,6 @@ extension WebServiceOperation {
                     })
                 }
             }
-            
             load()
         }
      }
@@ -113,7 +115,7 @@ extension WebServiceOperation {
         }
     }
     
-    func handleDownloadCompletion (result : AnyObject?, error : NSError?) {
+    func handleDownloadCompletion (result : JSONDictionary?, error : NSError?) {
        
         if error != nil {
             // Send the log here
