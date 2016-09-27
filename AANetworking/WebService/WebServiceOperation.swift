@@ -11,28 +11,29 @@ import Foundation
 final class WebServiceOperation : NSOperation {
     
     internal var operationType : OperationType? = nil
-    let webServiceManager = WebServiceManager ()
+    private let webServiceManager = WebServiceManager ()
     private var urlString : String? = nil
     private var processDownloadedData : ProcessDownloadCompletionHandler? = nil
     private var request: NSMutableURLRequest?
-    private var completionHandler : WebRequestCompletionHandler? = nil
+    private var completionHandler : WebServiceCompletionHandler? = nil
     private var postData : NSData?
-    private var type : RequestType?
+    private var requestType : RequestType?
     private var headerType : RequestHeaderFieldType?
     private var retryCount = 0
+    private var loadRequestType : LoadRequestType = .None
     
     class func instantiate () -> WebServiceOperation {
         return WebServiceOperation()
     }
 }
 
-
 extension WebServiceOperation {
-    internal func load<A>(resource: Resource<A>, completion:WebRequestCompletionHandler) {
+    func loadJSON<A>(resource: Resource<A>, completion:WebServiceCompletionHandler) {
+        loadRequestType = .JSON
         operationType = resource.operationType
         urlString = resource.urlString
         postData = resource.data
-        type = resource.requestType
+        requestType = resource.requestType
         headerType = resource.headerType
         completionHandler = completion
         processDownloadedData = resource.parse
@@ -63,23 +64,25 @@ extension WebServiceOperation {
             return
         }
         
-        let JSONRequest = JSONRequestor ()
-        JSONRequest.timeOut = 60 *  Double ((self.retryCount + 1))
-        
-        // No Network Condition
-        
-        if self.type == .GET {
-            JSONRequest.getRequest(url!, completion: { (data, error,shouldRetry) in
-            })
-        }
-        else if self.type == .POST {
-            JSONRequest.postRequest(withData: postData!, url: url!, headerType: headerType!) { (data, error,shouldRetry) in
+        if self.loadRequestType == .JSON {
+            let JSONRequest = JSONRequestor ()
+            JSONRequest.timeOut = 60 *  Double ((self.retryCount + 1))
+            
+            // No Network Condition
+            
+            if self.requestType == .GET {
+                JSONRequest.getRequest(url!, completion: { (data, error,shouldRetry) in
+                })
+            }
+            else if self.requestType == .POST {
+                JSONRequest.postRequest(withData: postData!, url: url!, headerType: headerType!) { (data, error,shouldRetry) in
+                }
+            }
+            else {
+                
             }
         }
-        else {
-            
-        }
-    }
+     }
     
     func informCompletion(withData data: AnyObject?, error: NSError?) {
         dispatch_async(dispatch_get_main_queue() ) {

@@ -9,10 +9,6 @@
 import Foundation
 import UIKit
 
-
-typealias WebRequestCompletionHandler = ((AnyObject?, NSError?) -> Void)
-typealias ProcessDownloadCompletionHandler = ((AnyObject) -> AnyObject?)
-
 struct Resource <A> {
     let urlString : String
     let operationType : OperationType

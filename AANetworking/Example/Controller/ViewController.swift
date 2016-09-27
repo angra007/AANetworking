@@ -14,13 +14,13 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-//        let movieResource = WebRequestResources.movieResource()
-//        WebServiceOperation.instantiate().load(movieResource) { (data, error) in
-//            guard let movie = (data as? [Movie]) else {
-//                // Display Some Error
-//                return }
-//            print(movie)
-//        }
+        let movieResource = WebRequestResources.movieResource()
+        WebServiceOperation.instantiate().loadJSON(movieResource) { (data, error) in
+            guard let movie = (data as? [Movie]) else {
+                // Display Some Error
+                return }
+            print(movie)
+        }
         
     }
 
@@ -37,16 +37,15 @@ typealias JSONDictionary = [String : AnyObject]
 class WebRequestResources {
     
 
-//    class func movieResource () -> Resource<[Movie]> {
-//        let type : OperationType = .topRated
-//        let resource = Resource<[Movie]>   (urlString: type.url ,operationType : type, parse: { data in
-//            let json = try? NSJSONSerialization.JSONObjectWithData(data, options: [])
-//            guard let dictionaries = json as? [String:AnyObject] else { return nil }
-//            guard let results : [AnyObject] = dictionaries["results"] as? [AnyObject] else { return nil }
-//
-//        })
-//        return resource
-//    }
+    class func movieResource () -> Resource<[Movie]> {
+        let type : OperationType = .topRated
+        let resource = Resource<[Movie]>   (urlString: type.url ,operationType : type, parse: { dictionaries in
+            guard let results : [AnyObject] = dictionaries["results"] as? [AnyObject] else { return nil }
+            print(results)
+            return results;
+        })
+        return resource
+    }
     
 }
 

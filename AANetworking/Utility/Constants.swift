@@ -10,6 +10,12 @@ import Foundation
 
 let key : String = "4c989ba3813652e9f29d4dfd44bd34ad"
 
+
+
+typealias WebServiceCompletionHandler = ((AnyObject?, NSError?) -> Void)
+typealias ProcessDownloadCompletionHandler = ((AnyObject) -> AnyObject?)
+typealias WebRequestorCompletionHandler = ((AnyObject?, NSError?,Bool) -> Void)
+
 enum OperationType : String {
     case topRated = "topRatedMovies"
     
@@ -36,4 +42,12 @@ enum RequestHeaderFieldType  : Int {
 enum RequestType {
     case GET
     case POST
+}
+
+enum LoadRequestType {
+    case None
+    case JSON
+    case XML
+    case Images
+    case Video
 }

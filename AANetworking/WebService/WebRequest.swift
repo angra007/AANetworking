@@ -17,7 +17,7 @@ class WebRequest {
     var errorLogString = NSMutableString ()
     var requestURL : NSURL?
     var startDate : NSDate!
-    var completionHandler : ((AnyObject?, NSError?,Bool) -> Void)?
+    var completionHandler : WebRequestorCompletionHandler?
     
     func sendRequest () {
         startDate = NSDate()
@@ -27,8 +27,7 @@ class WebRequest {
             }.resume()
     }
     
-    func postRequest (withData data: NSData, url : NSURL, headerType :RequestHeaderFieldType, completion:((AnyObject?, NSError?,Bool) -> Void)) {
-        
+    func postRequest (withData data: NSData, url : NSURL, headerType :RequestHeaderFieldType, completion:WebRequestorCompletionHandler) {
         let sessionID = ""
         //let privateKey = "lmnop"
         completionHandler = completion
@@ -56,8 +55,6 @@ class WebRequest {
         errorLogString.appendString("Cookie: \(String(sessionID)) \n")
         errorLogString.appendString("Body: \(String(data: data,encoding: NSUTF8StringEncoding))")
         errorLogString.appendString ("*******************\n")
-        print(errorLogString)
-        
         self.sendRequest()
     }
     
@@ -75,18 +72,11 @@ class WebRequest {
         errorLogString.appendString("Url: \(String(url))\n")
         errorLogString.appendString("Cookie: \(String(sessionID)) \n")
         errorLogString.appendString ("*******************\n")
-        print(errorLogString)
         self.sendRequest()
     }
 }
 
-extension WebRequest {
-    func informCompletion(withData data: AnyObject?, error: NSError?,shouldRetry : Bool) {
-        dispatch_async(dispatch_get_main_queue() ) {
-            self.completionHandler? (data,error,shouldRetry)
-        }
-    }
-}
+
 
 
 
