@@ -38,22 +38,6 @@ extension WebServiceOperation {
         processDownloadedData = resource.parse
         webServiceManager.addRequest (self)
     }
-    
-    internal func loadMedia <A> (resource : MediaResource<A>, completion:WebRequestCompletionHandler) {
-        
-        let cache = Cache (type :.Asserts)
-        if let data = cache.data(forURL: resource.urlString, timestamp: resource.modificationDate) {
-            dispatch_async(dispatch_get_main_queue() ) {
-                self.completionHandler? (data,nil)
-            }
-        }
-        else {
-            urlString = resource.urlString
-            completionHandler = completion
-            processDownloadedData = resource.saveInCache
-            webServiceManager.addRequest(self)
-        }
-    }
 }
 
 extension WebServiceOperation {
