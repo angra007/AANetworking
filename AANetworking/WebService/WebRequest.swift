@@ -12,36 +12,22 @@ import Foundation
 class WebRequest {
     
     var multipartBoundary : String!
-    private var request : NSMutableURLRequest?
-    private var timeOut = 60.0
-    private var errorLogString = NSMutableString ()
-    private var startDate : NSDate!
-    private var completionHandler : ((NSData?, NSError?) -> Void)?
+    var request : NSMutableURLRequest?
+    var timeOut = 0.0
+    var errorLogString = NSMutableString ()
+    var requestURL : NSURL?
+    var startDate : NSDate!
+    var completionHandler : ((AnyObject?, NSError?,Bool) -> Void)?
     
-    class func instantiate () -> WebRequest {
-        return WebRequest()
-    }
-    
-    private func sendRequest () {
+    func sendRequest () {
         startDate = NSDate()
         NSURLSession.sharedSession().dataTaskWithRequest(self.request!) { (data, response, error) in
-            if error != nil {
-                self.informCompletion(withData: nil, error: error)
-                return
-            }
-            
-            if data == nil {
-                self.informCompletion(withData: nil, error: nil)
-                return
-            }
-            
-            self.informCompletion(withData: data!, error: nil)
-            
+            let timeSpent = NSDate.timeIntervalSinceDate(self.startDate)
+            print(timeSpent)
             }.resume()
     }
     
-    
-    func postRequest (withData data: NSData, url : NSURL, headerType :RequestHeaderFieldType, completion:((NSData?, NSError?) -> Void)) {
+    func postRequest (withData data: NSData, url : NSURL, headerType :RequestHeaderFieldType, completion:((AnyObject?, NSError?,Bool) -> Void)) {
         
         let sessionID = ""
         //let privateKey = "lmnop"
@@ -63,7 +49,7 @@ class WebRequest {
         request?.setValue(headerContentType, forHTTPHeaderField: "Content-Type")
         request?.HTTPBody = data
         
-        
+        requestURL = url
         errorLogString.appendString ("*******************\n")
         errorLogString.appendString("Request Type: POST \n")
         errorLogString.appendString("Url: \(String(url))\n")
@@ -72,10 +58,10 @@ class WebRequest {
         errorLogString.appendString ("*******************\n")
         print(errorLogString)
         
-        sendRequest()
+        self.sendRequest()
     }
     
-    func getRequest (url : NSURL, completion:((NSData?, NSError?) -> Void)) {
+    func getRequest (url : NSURL, completion:((AnyObject?, NSError?,Bool) -> Void)) {
         let sessionID = ""
         completionHandler = completion
         request =  NSMutableURLRequest.init(URL: url, cachePolicy: .ReloadIgnoringLocalAndRemoteCacheData, timeoutInterval: timeOut)
@@ -83,22 +69,21 @@ class WebRequest {
         let headerContentType = "application/x-www-form-urlencoded"
         request?.setValue(headerContentType, forHTTPHeaderField: "Content-Type")
         request?.setValue(sessionID, forHTTPHeaderField: "Cookie")
-        
+        requestURL = url
         errorLogString.appendString ("*******************\n")
         errorLogString.appendString("Request Type: GET \n")
         errorLogString.appendString("Url: \(String(url))\n")
         errorLogString.appendString("Cookie: \(String(sessionID)) \n")
         errorLogString.appendString ("*******************\n")
         print(errorLogString)
-        
-        sendRequest()
+        self.sendRequest()
     }
 }
 
 extension WebRequest {
-    func informCompletion(withData data: NSData?, error: NSError?) {
+    func informCompletion(withData data: AnyObject?, error: NSError?,shouldRetry : Bool) {
         dispatch_async(dispatch_get_main_queue() ) {
-            self.completionHandler? (data,error)
+            self.completionHandler? (data,error,shouldRetry)
         }
     }
 }

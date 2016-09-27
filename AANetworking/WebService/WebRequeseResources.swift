@@ -9,8 +9,9 @@
 import Foundation
 import UIKit
 
+
 typealias WebRequestCompletionHandler = ((AnyObject?, NSError?) -> Void)
-typealias ProcessDownloadCompletionHandler = ((NSData) -> AnyObject?)
+typealias ProcessDownloadCompletionHandler = ((NSData) throws -> AnyObject?)
 
 
 struct Resource <A> {

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DE12C99B1D9A329D00DDE37D /* JSONRequestor.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE12C99A1D9A329D00DDE37D /* JSONRequestor.swift */; };
 		DE230A2D1D99018200571BDB /* WebRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE230A2C1D99018200571BDB /* WebRequest.swift */; };
 		DE5096D21D8F7FE80002196A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5096D01D8F7FE80002196A /* AppDelegate.swift */; };
 		DE5096D31D8F7FE80002196A /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DE5096D11D8F7FE80002196A /* Info.plist */; };
@@ -42,6 +43,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		DE12C99A1D9A329D00DDE37D /* JSONRequestor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JSONRequestor.swift; path = WebService/JSONRequestor.swift; sourceTree = "<group>"; };
 		DE230A2C1D99018200571BDB /* WebRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebRequest.swift; path = WebService/WebRequest.swift; sourceTree = "<group>"; };
 		DE5096D01D8F7FE80002196A /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Root/AppDelegate.swift; sourceTree = "<group>"; };
 		DE5096D11D8F7FE80002196A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Root/Info.plist; sourceTree = "<group>"; };
@@ -187,6 +189,7 @@
 				DE5096D91D8F80650002196A /* WebServiceManager.swift */,
 				DE5096DA1D8F80650002196A /* WebServiceOperation.swift */,
 				DE230A2C1D99018200571BDB /* WebRequest.swift */,
+				DE12C99A1D9A329D00DDE37D /* JSONRequestor.swift */,
 			);
 			name = WebService;
 			path = AANetworking;
@@ -341,6 +344,7 @@
 				DE5096DD1D8F80660002196A /* WebServiceOperation.swift in Sources */,
 				DE5096D71D8F802B0002196A /* ViewController.swift in Sources */,
 				DE5096DB1D8F80660002196A /* WebRequeseResources.swift in Sources */,
+				DE12C99B1D9A329D00DDE37D /* JSONRequestor.swift in Sources */,
 				DE5096E11D8F808E0002196A /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

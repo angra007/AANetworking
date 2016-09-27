@@ -19,11 +19,15 @@ final class WebServiceOperation : NSOperation {
     private var postData : NSData?
     private var type : RequestType?
     private var headerType : RequestHeaderFieldType?
+    private var retryCount = 0
     
     class func instantiate () -> WebServiceOperation {
         return WebServiceOperation()
     }
-    
+}
+
+
+extension WebServiceOperation {
     internal func load<A>(resource: Resource<A>, completion:WebRequestCompletionHandler) {
         operationType = resource.operationType
         urlString = resource.urlString
@@ -54,11 +58,6 @@ final class WebServiceOperation : NSOperation {
 
 extension WebServiceOperation {
     internal override func main() {
-        func informCompletion(withData data: AnyObject?, error: NSError?) {
-            dispatch_async(dispatch_get_main_queue() ) {
-                (self.completionHandler? (data,error))!
-            }
-        }
         
         if self.cancelled {
             informCompletion(withData: nil, error: nil)
@@ -80,35 +79,39 @@ extension WebServiceOperation {
             return
         }
         
+        let JSONRequest = JSONRequestor ()
+        JSONRequest.timeOut = 60 *  Double ((self.retryCount + 1))
+        
+        // No Network Condition
+        
         if self.type == .GET {
-            WebRequest.instantiate().getRequest(url!, completion: { (data, error) in
-                if error != nil {
-                    informCompletion(withData: nil, error: error)
-                }
-                else
-                {
-                    let result =  self.processDownloadedData!(data!)
-                    // 500,501,1000
-                    informCompletion(withData: result, error: nil)
-                }
+            JSONRequest.getRequest(url!, completion: { (data, error,shouldRetry) in
             })
         }
-        else {
-            WebRequest.instantiate().postRequest(withData: postData!, url: url!, headerType: headerType!) { (data, error) in
-                
-                if error != nil {
-                    informCompletion(withData: nil, error: error)
-                }
-                else
-                {
-                    let result =  self.processDownloadedData!(data!)
-                    // 500,501,1000
-                    informCompletion(withData: result, error: nil)
-                }
+        else if self.type == .POST {
+            JSONRequest.postRequest(withData: postData!, url: url!, headerType: headerType!) { (data, error,shouldRetry) in
             }
+        }
+        else {
+            
+        }
+    }
+    
+    func informCompletion(withData data: AnyObject?, error: NSError?) {
+        dispatch_async(dispatch_get_main_queue() ) {
+            (self.completionHandler? (data,error))!
         }
     }
 }
+
+extension WebServiceOperation {
+    func retry() {
+        retryCount = retryCount + 1
+        webServiceManager.cancelOperationWithOperationType(self.operationType!)
+        webServiceManager.addRequest(self)
+    }
+}
+
 
 
 
