@@ -13,9 +13,10 @@ let key : String = "4c989ba3813652e9f29d4dfd44bd34ad"
 typealias JSONDictionary = [String : AnyObject]
 typealias WebServiceCompletionHandler = ((AnyObject?, NSError?) -> Void)
 typealias ProcessDownloadCompletionHandler = ((JSONDictionary) -> AnyObject?)
-typealias WebRequestorCompletionHandler = (([String:AnyObject]?, NSError?,Bool) -> Void)
+typealias WebRequestorCompletionHandler = (([String:AnyObject]?, NSError?) -> Void)
 
 enum OperationType : String {
+    
     case topRated = "topRatedMovies"
     
     var url : String {
@@ -32,13 +33,13 @@ enum CacheType : String {
 
 
 enum RequestContentType  : Int {
-    case None = 0
-    case URLEncoded = 1
-    case JSON = 2
-    case Multipart = 3
+    case none = 0
+    case urlEncoded = 1
+    case json = 2
+    case multipart = 3
 }
 
 enum RequestMethodType {
-    case GET
-    case POST
+    case get
+    case post
 }

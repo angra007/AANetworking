@@ -20,10 +20,10 @@ struct Movie {
 extension Movie {
     init? (movieDetails : JSONDictionary ) {
         guard let overView = movieDetails["overview"] as? String,
-            releaseData = movieDetails["release_date"] as? String,
-            originalTitle = movieDetails["original_title"] as? String,
-            originalLanguage = movieDetails["original_language"] as? String,
-            title = movieDetails["title"] as? String
+            let releaseData = movieDetails["release_date"] as? String,
+            let originalTitle = movieDetails["original_title"] as? String,
+            let originalLanguage = movieDetails["original_language"] as? String,
+            let title = movieDetails["title"] as? String
             else { return nil }
         
         self.overView = overView

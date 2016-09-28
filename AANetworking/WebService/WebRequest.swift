@@ -8,67 +8,94 @@
 
 import Foundation
 
-
-class WebRequest {
+class WebRequest : NSObject {
     
-    var multipartBoundary : String!
-    var request : NSMutableURLRequest?
-    var timeOut = 0.0
-    var errorLogString = NSMutableString ()
-    var requestURL : NSURL?
-    var startDate : NSDate!
-    var completionHandler : WebRequestorCompletionHandler?
+    fileprivate var multipartBoundary : String!
+    fileprivate var request : NSMutableURLRequest?
+    fileprivate var timeOut : Double {
+        get {
+            return 60.0 * Double(retryCount + 1)
+        }
+    }
+    fileprivate var errorLogString = NSMutableString ()
+    fileprivate var requestURL : URL?
+    fileprivate var startDate : Date!
+    fileprivate var completionHandler : WebRequestorCompletionHandler?
+    fileprivate var retryCount = 0
+    fileprivate let maximunNumberOfRetry = 3
     
+    /// This method hits the server with the request constructed by the caller
     func sendRequest () {
-        startDate = NSDate()
-        NSURLSession.sharedSession().dataTaskWithRequest(self.request!) { (data, response, error) in
-            let timeSpent = NSDate.timeIntervalSinceDate(self.startDate)
-            print(timeSpent)
-            
-            let result = self.validateYourself(data, error: error)
-            if result.error != nil {
-                self.informCompletion(withData: result.data, error: result.error, shouldRetry: result.shouldRetry)
+        startDate = Date()
+    
+        URLSession.shared.dataTask(with: self.request! as URLRequest, completionHandler: { (data, response, error) in
+            let timeSpent = Date().timeIntervalSince(self.startDate)
+            self.errorLogString.append ("Time Spent for the Request \(String(describing: self.requestURL!)) is \(timeSpent) \n")
+            self.errorLogString.append ("*******************\n")
+            let result = self.validateYourself(data, error: error as NSError?)
+            let validator = self.handleInvalidResponseFromServer(result.data!)
+            print(self.errorLogString)
+
+            if result.error != nil || validator.error != nil {
+                
+                if (result.shouldRetry == true || validator.shouldRetry == true) &&
+                    self.responds(to: #selector(self.handleRetry))  &&
+                    (self.retryCount) < ((self.maximunNumberOfRetry) - 1)
+                {
+                    self.retryCount = self.retryCount + 1
+                    self.handleRetry()
+                }
+                else {
+                    self.informCompletion(withData: result.data, error: result.error)
+                }
             }
             else {
-                let validator = self.handleInvalidResponseFromServer(result.data!)
-                print(self.errorLogString)
-                self.informCompletion(withData: result.data, error: validator.error, shouldRetry: validator.shouldRetry)
+                self.informCompletion(withData: result.data, error: validator.error)
             }
-        }.resume()
+        }) .resume()
     }
     
-    /**
-        This method has to be implemented by the base class to handle any kind of Invalid Response. 
-        @param response : Any Valid JSON From Server
+    
+    /// This method has to be handled by the base class to support any kind of retry
+    func handleRetry () {
         
-        @return
-        error : Custom Error due to response
-        shouldRetry : Whether the request should go again
-    */
-    func handleInvalidResponseFromServer (response : JSONDictionary) -> (error : NSError?,shouldRetry : Bool) {
+    }
+    
+    /// This method has to be implemented by the base class to handle any kind of Invalid Response.
+    ///
+    /// - parameter response: Any Valid JSON From Server
+    ///
+    /// - returns: Custom Error due to response
+    func handleInvalidResponseFromServer (_ response : JSONDictionary) -> (error : NSError?,shouldRetry : Bool) {
         // Competion Handler
         return (nil,false)
     }
     
     
-    func validateYourself (data : NSData?, error : NSError?) -> (data : JSONDictionary?,error : NSError?,shouldRetry : Bool)  {
-        func validateJSON (withData data : NSData) throws -> AnyObject {
-            let json = try? NSJSONSerialization.JSONObjectWithData(data, options: [])
-            return json!
+    /// This method validated the response from the Server
+    ///
+    /// - parameter data:  This is the raw date we receive from the Server
+    /// - parameter error: This parameter is any error which might have happened while getting data from the Server
+    ///
+    /// - returns: If the validation was successful data parameter will have the JSON. If there was error while validating them, respected error will go in error parameter. shouldRetry will denote if we have to send a retry request or not.
+    func validateYourself (_ data : Data?, error : NSError?) -> (data : JSONDictionary?,error : NSError?,shouldRetry : Bool)  {
+        func validateJSON (withData data : Data) throws -> AnyObject {
+            let json = try? JSONSerialization.jsonObject(with: data, options: [])
+            return json! as AnyObject
         }
         
         if error != nil {
-            self.errorLogString.appendString ("*******************\n")
-            self.errorLogString.appendString("Connection failed for request = \(String(self.requestURL!))\n")
-            self.errorLogString.appendString("Connection failed for Error = \(error?.localizedDescription)\n")
-            self.errorLogString.appendString ("*******************\n")
+            self.errorLogString.append ("*******************\n")
+            self.errorLogString.append("Connection failed for request = \(String(describing: self.requestURL!))\n")
+            self.errorLogString.append("Connection failed for Error = \(error?.localizedDescription)\n")
+            self.errorLogString.append ("*******************\n")
             return (nil,error,true)
         }
         
         if data == nil {
-            self.errorLogString.appendString ("Response is Nil\n")
-            self.errorLogString.appendString ("*******************\n")
-            self.errorLogString.appendString ("Response for URL \(String(self.requestURL!)) is NULL \n")
+            self.errorLogString.append ("Response is Nil\n")
+            self.errorLogString.append ("*******************\n")
+            self.errorLogString.append ("Response for URL \(String(describing: self.requestURL!)) is NULL \n")
             let dataError =  NSError (domain: "NoDataAvailable",code: -99,userInfo: [NSLocalizedDescriptionKey: "No data available"])
             return (nil,dataError,true)
         }
@@ -78,11 +105,11 @@ class WebRequest {
         do {
             let json = try validateJSON (withData: data!)
             response = json
-            self.errorLogString.appendString ("Response for URL \(String(self.requestURL!)) is \(json) \n")
+            self.errorLogString.append ("Response for URL \(String(describing: self.requestURL!)) is \(json) \n")
         }
         catch let error as NSError {
-            response = NSString(data: data!, encoding: NSUTF8StringEncoding)!
-            self.errorLogString.appendString("\n\n ######************JSON Parser error in the response - *******#######\n\n\(String(response)) \n\n")
+            response = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!
+            self.errorLogString.append("\n\n ######************JSON Parser error in the response - *******#######\n\n\(String(describing: response)) \n\n")
             return (nil,error,false)
         }
         
@@ -94,60 +121,77 @@ class WebRequest {
         return (dictionaries,nil,false)
     }
     
-    func postRequest (withData data: NSData, url : NSURL, contentType :RequestContentType, completion:WebRequestorCompletionHandler) {
+    
+    /// This method creates a POST Request
+    ///
+    /// - parameter data:        Data which has to be sent to the server
+    /// - parameter url:         The URL to which the request has to be send
+    /// - parameter contentType: Content Type of the request
+    /// - parameter completion:  This completion handler is called after we receive the data or error back from server
+    func postRequest (withData data: Data, url : URL, contentType :RequestContentType, completion:@escaping WebRequestorCompletionHandler) {
         let sessionID = ""
         //let privateKey = "lmnop"
         completionHandler = completion
-        request =  NSMutableURLRequest.init(URL: url, cachePolicy: .ReloadIgnoringLocalAndRemoteCacheData, timeoutInterval: timeOut)
-        request?.HTTPMethod = "POST"
-        request?.setValue(String(data.length), forHTTPHeaderField: "Content-Length")
+        request =  NSMutableURLRequest.init(url: url, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: timeOut)
+        request?.httpMethod = "POST"
+        request?.setValue(String(data.count), forHTTPHeaderField: "Content-Length")
         var headerContentType : String
         switch  contentType {
-        case .URLEncoded :
+        case .urlEncoded :
             headerContentType = "application/x-www-form-urlencoded"
-        case .JSON :
+        case .json :
             headerContentType = "application/json"
-        case .Multipart:
+        case .multipart:
              headerContentType = "multipart/form-data; boundary=" + multipartBoundary
         default:
             headerContentType = "application/x-www-form-urlencoded"
         }
         request?.setValue(headerContentType, forHTTPHeaderField: "Content-Type")
-        request?.HTTPBody = data
+        request?.httpBody = data
         
         requestURL = url
-        errorLogString.appendString ("*******************\n")
-        errorLogString.appendString("Request Type: POST \n")
-        errorLogString.appendString("Url: \(String(url))\n")
-        errorLogString.appendString("Cookie: \(String(sessionID)) \n")
-        errorLogString.appendString("Body: \(String(data: data,encoding: NSUTF8StringEncoding))")
-        errorLogString.appendString ("*******************\n")
+        errorLogString.append ("*******************\n")
+        errorLogString.append("Request Type: POST \n")
+        errorLogString.append("Url: \(String(describing: url))\n")
+        errorLogString.append("Cookie: \(String(sessionID)) \n")
+        errorLogString.append("Body: \(String(data: data,encoding: String.Encoding.utf8))")
+        errorLogString.append ("*******************\n")
         self.sendRequest()
     }
     
-    func getRequest (url : NSURL, completion: WebRequestorCompletionHandler) {
+    
+    /// This methos creats a GET Request
+    ///
+    /// - parameter url:        The URL to which the request has to be send
+    /// - parameter completion: This completion handler is called after we receive the data or error back from server
+    func getRequest (_ url : URL, completion: @escaping WebRequestorCompletionHandler) {
         let sessionID = ""
         completionHandler = completion
-        request =  NSMutableURLRequest.init(URL: url, cachePolicy: .ReloadIgnoringLocalAndRemoteCacheData, timeoutInterval: timeOut)
-        request?.HTTPMethod = "GET"
+        request =  NSMutableURLRequest.init(url: url, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: timeOut)
+        request?.httpMethod = "GET"
         let headerContentType = "application/x-www-form-urlencoded"
         request?.setValue(headerContentType, forHTTPHeaderField: "Content-Type")
         request?.setValue(sessionID, forHTTPHeaderField: "Cookie")
         requestURL = url
-        errorLogString.appendString ("*******************\n")
-        errorLogString.appendString("Request Type: GET \n")
-        errorLogString.appendString("Url: \(String(url))\n")
-        errorLogString.appendString("Cookie: \(String(sessionID)) \n")
-        errorLogString.appendString ("*******************\n")
+        errorLogString.append ("*******************\n")
+        errorLogString.append("Request Type: GET \n")
+        errorLogString.append("Url: \(String(describing: url))\n")
+        errorLogString.append("Cookie: \(String(sessionID)) \n")
+        errorLogString.append ("*******************\n")
         self.sendRequest()
     }
 }
 
 extension WebRequest {
-    func informCompletion(withData data: JSONDictionary?, error: NSError?,shouldRetry : Bool) {
-        dispatch_async(dispatch_get_main_queue() ) {
-            self.completionHandler? (data,error,shouldRetry)
-        }
+    /// This is the method which will call the completion Handler
+    ///
+    /// - parameter data:        data which has to send back
+    /// - parameter error:       error which has to send back
+    /// - parameter shouldRetry: shouldRetry the request
+    func informCompletion(withData data: JSONDictionary?, error: NSError?) {
+       
+            self.completionHandler? (data,error)
+        
     }
 }
 

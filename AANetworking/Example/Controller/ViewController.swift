@@ -15,11 +15,12 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
         
         let movieResource = WebRequestResources.movieResource()
-        WebServiceOperation.instantiate().loadJSON(movieResource) { (data, error) in
-            guard let movie = (data as? [Movie]) else {
-                // Display Some Error
-                return }
-            print(movie)
+        let webservice = WebServiceOperation()
+        webservice.loadJSON(movieResource) { (data, error) in
+//            guard let movie = (data as? [Movie]) else {
+//                // Display Some Error
+//                return }
+            print(data)
         }
         
     }
@@ -35,7 +36,7 @@ class WebRequestResources {
     class func movieResource () -> Resource<[Movie]> {
         let resource = Resource<[Movie]>   (operationType : .topRated, parse: { dictionaries in
             guard let results : [AnyObject] = dictionaries["results"] as? [AnyObject] else { return nil }
-            return results;
+            return results as AnyObject?;
         })
         return resource
     }

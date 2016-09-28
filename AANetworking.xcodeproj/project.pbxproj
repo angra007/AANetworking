@@ -16,7 +16,6 @@
 		DE5096DB1D8F80660002196A /* WebRequeseResources.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5096D81D8F80650002196A /* WebRequeseResources.swift */; };
 		DE5096DC1D8F80660002196A /* WebServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5096D91D8F80650002196A /* WebServiceManager.swift */; };
 		DE5096DD1D8F80660002196A /* WebServiceOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5096DA1D8F80650002196A /* WebServiceOperation.swift */; };
-		DE5096DF1D8F80770002196A /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5096DE1D8F80770002196A /* Cache.swift */; };
 		DE5096E11D8F808E0002196A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5096E01D8F808E0002196A /* Constants.swift */; };
 		DEF4E5FD1D6C29160022992C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DEF4E5FB1D6C29160022992C /* Main.storyboard */; };
 		DEF4E5FF1D6C29160022992C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DEF4E5FE1D6C29160022992C /* Assets.xcassets */; };
@@ -52,7 +51,6 @@
 		DE5096D81D8F80650002196A /* WebRequeseResources.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebRequeseResources.swift; path = WebService/WebRequeseResources.swift; sourceTree = "<group>"; };
 		DE5096D91D8F80650002196A /* WebServiceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebServiceManager.swift; path = WebService/WebServiceManager.swift; sourceTree = "<group>"; };
 		DE5096DA1D8F80650002196A /* WebServiceOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebServiceOperation.swift; path = WebService/WebServiceOperation.swift; sourceTree = "<group>"; };
-		DE5096DE1D8F80770002196A /* Cache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Cache.swift; path = Cache/Cache.swift; sourceTree = "<group>"; };
 		DE5096E01D8F808E0002196A /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Constants.swift; path = Utility/Constants.swift; sourceTree = "<group>"; };
 		DED0183E1D745EF8009311D2 /* AANetworking-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AANetworking-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
 		DEF4E5F41D6C29160022992C /* AANetworking.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AANetworking.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -118,21 +116,11 @@
 			name = Controller;
 			sourceTree = "<group>";
 		};
-		DED0183B1D745C00009311D2 /* Cache */ = {
-			isa = PBXGroup;
-			children = (
-				DE5096DE1D8F80770002196A /* Cache.swift */,
-			);
-			name = Cache;
-			path = AANetworking;
-			sourceTree = "<group>";
-		};
 		DEF4E5EB1D6C29160022992C = {
 			isa = PBXGroup;
 			children = (
 				DEF4E6251D6C29670022992C /* WebService */,
 				DEF694491D6CDD2400CDBB6D /* Utilities */,
-				DED0183B1D745C00009311D2 /* Cache */,
 				DE1BB02E1D8694D400E8A814 /* Example */,
 				DEF4E5F61D6C29160022992C /* Root */,
 				DEF4E60B1D6C29160022992C /* AANetworkingTests */,
@@ -186,8 +174,8 @@
 			isa = PBXGroup;
 			children = (
 				DE5096D81D8F80650002196A /* WebRequeseResources.swift */,
-				DE5096D91D8F80650002196A /* WebServiceManager.swift */,
 				DE5096DA1D8F80650002196A /* WebServiceOperation.swift */,
+				DE5096D91D8F80650002196A /* WebServiceManager.swift */,
 				DE230A2C1D99018200571BDB /* WebRequest.swift */,
 				DE12C99A1D9A329D00DDE37D /* JSONRequestor.swift */,
 			);
@@ -272,13 +260,16 @@
 				TargetAttributes = {
 					DEF4E5F31D6C29160022992C = {
 						CreatedOnToolsVersion = 7.3.1;
+						LastSwiftMigration = 0800;
 					};
 					DEF4E6071D6C29160022992C = {
 						CreatedOnToolsVersion = 7.3.1;
+						LastSwiftMigration = 0800;
 						TestTargetID = DEF4E5F31D6C29160022992C;
 					};
 					DEF4E6121D6C29160022992C = {
 						CreatedOnToolsVersion = 7.3.1;
+						LastSwiftMigration = 0800;
 						TestTargetID = DEF4E5F31D6C29160022992C;
 					};
 				};
@@ -339,7 +330,6 @@
 				DE230A2D1D99018200571BDB /* WebRequest.swift in Sources */,
 				DE5096D21D8F7FE80002196A /* AppDelegate.swift in Sources */,
 				DE5096DC1D8F80660002196A /* WebServiceManager.swift in Sources */,
-				DE5096DF1D8F80770002196A /* Cache.swift in Sources */,
 				DE5096D51D8F80220002196A /* Episode.swift in Sources */,
 				DE5096DD1D8F80660002196A /* WebServiceOperation.swift in Sources */,
 				DE5096D71D8F802B0002196A /* ViewController.swift in Sources */,
@@ -497,6 +487,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "AANetworking-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -510,6 +501,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = MyObjcApp.AANetworking;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "AANetworking-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -521,6 +513,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = MyObjcApp.AANetworkingTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AANetworking.app/AANetworking";
 			};
 			name = Debug;
@@ -533,6 +526,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = MyObjcApp.AANetworkingTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AANetworking.app/AANetworking";
 			};
 			name = Release;
@@ -544,6 +538,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = MyObjcApp.AANetworkingUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_TARGET_NAME = AANetworking;
 			};
 			name = Debug;
@@ -555,6 +550,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = MyObjcApp.AANetworkingUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_TARGET_NAME = AANetworking;
 			};
 			name = Release;
