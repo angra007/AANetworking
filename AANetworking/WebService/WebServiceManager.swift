@@ -43,7 +43,6 @@ extension WebServiceManager {
     func addRequest (_ request : WebServiceOperation) {
         requestQueue.addOperation(request)
     }
-    
 }
 
 

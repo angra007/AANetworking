@@ -10,25 +10,31 @@ import Foundation
 
 class WebRequest : NSObject {
     
+    fileprivate var errorLogString = NSMutableString ()
     fileprivate var multipartBoundary : String!
-    fileprivate var request : NSMutableURLRequest?
+    fileprivate var request : NSMutableURLRequest!
+    fileprivate var requestURL : URL!
+    fileprivate var startDate : Date!
+    fileprivate var completionHandler : WebRequestorCompletionHandler?
+    fileprivate var retryCount = 0
+   
+    fileprivate var maximunNumberOfRetry : Int {
+        get {
+            return 3
+        }
+    }
+    
     fileprivate var timeOut : Double {
         get {
             return 60.0 * Double(retryCount + 1)
         }
     }
-    fileprivate var errorLogString = NSMutableString ()
-    fileprivate var requestURL : URL?
-    fileprivate var startDate : Date!
-    fileprivate var completionHandler : WebRequestorCompletionHandler?
-    fileprivate var retryCount = 0
-    fileprivate let maximunNumberOfRetry = 3
     
     /// This method hits the server with the request constructed by the caller
     func sendRequest () {
         startDate = Date()
     
-        URLSession.shared.dataTask(with: self.request! as URLRequest, completionHandler: { (data, response, error) in
+        URLSession.shared.dataTask(with: self.request as URLRequest, completionHandler: { (data, response, error) in
             let timeSpent = Date().timeIntervalSince(self.startDate)
             self.errorLogString.append ("Time Spent for the Request \(String(describing: self.requestURL!)) is \(timeSpent) \n")
             self.errorLogString.append ("*******************\n")
@@ -86,7 +92,7 @@ class WebRequest : NSObject {
         
         if error != nil {
             self.errorLogString.append ("*******************\n")
-            self.errorLogString.append("Connection failed for request = \(String(describing: self.requestURL!))\n")
+            self.errorLogString.append("Connection failed for request = \(String(describing: self.requestURL))\n")
             self.errorLogString.append("Connection failed for Error = \(error?.localizedDescription)\n")
             self.errorLogString.append ("*******************\n")
             return (nil,error,true)
@@ -95,7 +101,7 @@ class WebRequest : NSObject {
         if data == nil {
             self.errorLogString.append ("Response is Nil\n")
             self.errorLogString.append ("*******************\n")
-            self.errorLogString.append ("Response for URL \(String(describing: self.requestURL!)) is NULL \n")
+            self.errorLogString.append ("Response for URL \(String(describing: self.requestURL)) is NULL \n")
             let dataError =  NSError (domain: "NoDataAvailable",code: -99,userInfo: [NSLocalizedDescriptionKey: "No data available"])
             return (nil,dataError,true)
         }
@@ -105,7 +111,7 @@ class WebRequest : NSObject {
         do {
             let json = try validateJSON (withData: data!)
             response = json
-            self.errorLogString.append ("Response for URL \(String(describing: self.requestURL!)) is \(json) \n")
+            self.errorLogString.append ("Response for URL \(String(describing: self.requestURL)) is \(json) \n")
         }
         catch let error as NSError {
             response = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!
@@ -133,8 +139,8 @@ class WebRequest : NSObject {
         //let privateKey = "lmnop"
         completionHandler = completion
         request =  NSMutableURLRequest.init(url: url, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: timeOut)
-        request?.httpMethod = "POST"
-        request?.setValue(String(data.count), forHTTPHeaderField: "Content-Length")
+        request.httpMethod = "POST"
+        request.setValue(String(data.count), forHTTPHeaderField: "Content-Length")
         var headerContentType : String
         switch  contentType {
         case .urlEncoded :
@@ -146,8 +152,8 @@ class WebRequest : NSObject {
         default:
             headerContentType = "application/x-www-form-urlencoded"
         }
-        request?.setValue(headerContentType, forHTTPHeaderField: "Content-Type")
-        request?.httpBody = data
+        request.setValue(headerContentType, forHTTPHeaderField: "Content-Type")
+        request.httpBody = data
         
         requestURL = url
         errorLogString.append ("*******************\n")
@@ -168,10 +174,10 @@ class WebRequest : NSObject {
         let sessionID = ""
         completionHandler = completion
         request =  NSMutableURLRequest.init(url: url, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: timeOut)
-        request?.httpMethod = "GET"
+        request.httpMethod = "GET"
         let headerContentType = "application/x-www-form-urlencoded"
-        request?.setValue(headerContentType, forHTTPHeaderField: "Content-Type")
-        request?.setValue(sessionID, forHTTPHeaderField: "Cookie")
+        request.setValue(headerContentType, forHTTPHeaderField: "Content-Type")
+        request.setValue(sessionID, forHTTPHeaderField: "Cookie")
         requestURL = url
         errorLogString.append ("*******************\n")
         errorLogString.append("Request Type: GET \n")
@@ -189,9 +195,7 @@ extension WebRequest {
     /// - parameter error:       error which has to send back
     /// - parameter shouldRetry: shouldRetry the request
     func informCompletion(withData data: JSONDictionary?, error: NSError?) {
-       
             self.completionHandler? (data,error)
-        
     }
 }
 
