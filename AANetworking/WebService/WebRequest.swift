@@ -135,8 +135,14 @@ class WebRequest : NSObject {
     /// - parameter contentType: Content Type of the request
     /// - parameter completion:  This completion handler is called after we receive the data or error back from server
     func postRequest (withData data: Data, url : URL, contentType :RequestContentType, completion:@escaping WebRequestorCompletionHandler) {
-        let sessionID = ""
-        //let privateKey = "lmnop"
+        let sessionID : String = "Your Cookie"
+        let privateKey : String = "Your Private Key"
+        
+        var pHash : String! = nil
+        var postData : Data
+        let timeStamp = Date().timeIntervalSince1970
+        requestURL = url
+        
         completionHandler = completion
         request =  NSMutableURLRequest.init(url: url, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: timeOut)
         request.httpMethod = "POST"
@@ -153,14 +159,35 @@ class WebRequest : NSObject {
             headerContentType = "application/x-www-form-urlencoded"
         }
         request.setValue(headerContentType, forHTTPHeaderField: "Content-Type")
-        request.httpBody = data
         
-        requestURL = url
+        if sessionID != nil
+        {
+            request.setValue(sessionID, forHTTPHeaderField: "Cookie")
+        }
+        
+        if privateKey != nil {
+            let timeInterval = String (timeStamp)
+            pHash = generateHMAC(key:privateKey , data: timeInterval)
+            request.setValue(pHash, forHTTPHeaderField: "pHash")
+        }
+        
+        if contentType == .urlEncoded {
+             var datastring = String(data: data, encoding: String.Encoding.utf8)
+            datastring =  "dtm=\(timeStamp)" + datastring!
+            postData = (datastring?.data(using: String.Encoding.utf8))!
+        }
+        else {
+            postData = data
+        }
+        
+        request.httpBody = postData
+        
         errorLogString.append ("*******************\n")
         errorLogString.append("Request Type: POST \n")
         errorLogString.append("Url: \(String(describing: url))\n")
         errorLogString.append("Cookie: \(String(sessionID)) \n")
-        errorLogString.append("Body: \(String(data: data,encoding: String.Encoding.utf8))")
+        errorLogString.append("pHash: \(pHash)")
+        errorLogString.append("Body: \(String(data: postData, encoding: String.Encoding.utf8))")
         errorLogString.append ("*******************\n")
         self.sendRequest()
     }
@@ -171,7 +198,12 @@ class WebRequest : NSObject {
     /// - parameter url:        The URL to which the request has to be send
     /// - parameter completion: This completion handler is called after we receive the data or error back from server
     func getRequest (_ url : URL, completion: @escaping WebRequestorCompletionHandler) {
-        let sessionID = ""
+        
+        let sessionID : String = "Your Cookie"
+        let privateKey : String = "Your Private Key"
+        var pHash : String! = nil
+        let timeStamp = Date().timeIntervalSince1970
+        
         completionHandler = completion
         request =  NSMutableURLRequest.init(url: url, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: timeOut)
         request.httpMethod = "GET"
@@ -179,10 +211,18 @@ class WebRequest : NSObject {
         request.setValue(headerContentType, forHTTPHeaderField: "Content-Type")
         request.setValue(sessionID, forHTTPHeaderField: "Cookie")
         requestURL = url
+        
+        if privateKey != nil {
+            let timeInterval = String (timeStamp)
+            pHash = generateHMAC(key:privateKey , data: timeInterval)
+            request.setValue(pHash, forHTTPHeaderField: "pHash")
+        }
+        
         errorLogString.append ("*******************\n")
         errorLogString.append("Request Type: GET \n")
         errorLogString.append("Url: \(String(describing: url))\n")
         errorLogString.append("Cookie: \(String(sessionID)) \n")
+        errorLogString.append("pHash: \(pHash)")
         errorLogString.append ("*******************\n")
         self.sendRequest()
     }
@@ -199,6 +239,35 @@ extension WebRequest {
     }
 }
 
-
+extension WebRequest {
+    
+    
+    /// This method genrates the pHash sent to the server
+    ///
+    /// - parameter key:  dtm to genrate pHash
+    /// - parameter data: private key to genrate pHash
+    func generateHMAC(key: String, data: String) -> String {
+        
+        var result: [CUnsignedChar]
+        if let cKey = key.cString(using: String.Encoding.utf8),
+            let cData = data.cString(using: String.Encoding.utf8)
+        {
+            let algo  = CCHmacAlgorithm(kCCHmacAlgSHA512)
+            result = Array(repeating: 0, count: Int(CC_SHA512_DIGEST_LENGTH))
+            
+            CCHmac(algo, cKey, cKey.count-1, cData, cData.count-1, &result)
+        }
+        else {
+            // as @MartinR points out, this is in theory impossible
+            // but personally, I prefer doing this to using `!`
+            fatalError("Nil returned when processing input strings as UTF8")
+        }
+        
+        let outputData = NSData(bytes: result as [UInt8], length: result.count * MemoryLayout<CUnsignedChar>.size )
+        
+        let encodedData = outputData.base64EncodedData(options: [.endLineWithLineFeed])
+        return String(data: encodedData, encoding: String.Encoding.utf8)!
+    }
+}
 
 
