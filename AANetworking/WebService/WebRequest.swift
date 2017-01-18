@@ -17,7 +17,7 @@ class WebRequest : NSObject {
     fileprivate var startDate : Date!
     fileprivate var completionHandler : WebRequestorCompletionHandler?
     fileprivate var retryCount = 0
-   
+    
     fileprivate var maximunNumberOfRetry : Int {
         get {
             return 3
@@ -30,18 +30,25 @@ class WebRequest : NSObject {
         }
     }
     
+    lazy var downloadsSession: URLSession = {
+        let configuration = URLSessionConfiguration.default
+        let session = URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)
+        return session
+    }()
+    
+    
     /// This method hits the server with the request constructed by the caller
     func sendRequest () {
         startDate = Date()
-    
-        URLSession.shared.dataTask(with: self.request as URLRequest, completionHandler: { (data, response, error) in
+        
+        downloadsSession.dataTask(with: self.request as URLRequest, completionHandler: { (data, response, error) in
             let timeSpent = Date().timeIntervalSince(self.startDate)
             self.errorLogString.append ("Time Spent for the Request \(String(describing: self.requestURL!)) is \(timeSpent) \n")
             self.errorLogString.append ("*******************\n")
             let result = self.validateYourself(data, error: error as NSError?)
             let validator = self.handleInvalidResponseFromServer(result.data!)
             print(self.errorLogString)
-
+            
             if result.error != nil || validator.error != nil {
                 
                 if (result.shouldRetry == true || validator.shouldRetry == true) &&
@@ -135,8 +142,8 @@ class WebRequest : NSObject {
     /// - parameter contentType: Content Type of the request
     /// - parameter completion:  This completion handler is called after we receive the data or error back from server
     func postRequest (withData data: Data, url : URL, contentType :RequestContentType, completion:@escaping WebRequestorCompletionHandler) {
-        let sessionID : String = "Your Cookie"
-        let privateKey : String = "Your Private Key"
+        let sessionID : String? = "Your Cookie"
+        let privateKey : String? = "Your Private Key"
         
         var pHash : String! = nil
         var postData : Data
@@ -154,7 +161,7 @@ class WebRequest : NSObject {
         case .json :
             headerContentType = "application/json"
         case .multipart:
-             headerContentType = "multipart/form-data; boundary=" + multipartBoundary
+            headerContentType = "multipart/form-data; boundary=" + multipartBoundary
         default:
             headerContentType = "application/x-www-form-urlencoded"
         }
@@ -167,12 +174,12 @@ class WebRequest : NSObject {
         
         if privateKey != nil {
             let timeInterval = String (timeStamp)
-            pHash = generateHMAC(key:privateKey , data: timeInterval)
+            pHash = generateHMAC(key:privateKey! , data: timeInterval)
             request.setValue(pHash, forHTTPHeaderField: "pHash")
         }
         
         if contentType == .urlEncoded {
-             var datastring = String(data: data, encoding: String.Encoding.utf8)
+            var datastring = String(data: data, encoding: String.Encoding.utf8)
             datastring =  "dtm=\(timeStamp)" + datastring!
             postData = (datastring?.data(using: String.Encoding.utf8))!
         }
@@ -185,7 +192,7 @@ class WebRequest : NSObject {
         errorLogString.append ("*******************\n")
         errorLogString.append("Request Type: POST \n")
         errorLogString.append("Url: \(String(describing: url))\n")
-        errorLogString.append("Cookie: \(String(sessionID)) \n")
+        errorLogString.append("Cookie: \(String(describing: sessionID)) \n")
         errorLogString.append("pHash: \(pHash)")
         errorLogString.append("Body: \(String(data: postData, encoding: String.Encoding.utf8))")
         errorLogString.append ("*******************\n")
@@ -199,8 +206,10 @@ class WebRequest : NSObject {
     /// - parameter completion: This completion handler is called after we receive the data or error back from server
     func getRequest (_ url : URL, completion: @escaping WebRequestorCompletionHandler) {
         
-        let sessionID : String = "Your Cookie"
-        let privateKey : String = "Your Private Key"
+        let sessionID : String? = "Your Cookie"
+        let privateKey : String? = "Your Private Key"
+        
+        
         var pHash : String! = nil
         let timeStamp = Date().timeIntervalSince1970
         
@@ -214,14 +223,14 @@ class WebRequest : NSObject {
         
         if privateKey != nil {
             let timeInterval = String (timeStamp)
-            pHash = generateHMAC(key:privateKey , data: timeInterval)
+            pHash = generateHMAC(key:privateKey! , data: timeInterval)
             request.setValue(pHash, forHTTPHeaderField: "pHash")
         }
         
         errorLogString.append ("*******************\n")
         errorLogString.append("Request Type: GET \n")
         errorLogString.append("Url: \(String(describing: url))\n")
-        errorLogString.append("Cookie: \(String(sessionID)) \n")
+        errorLogString.append("Cookie: \(String(describing: sessionID)) \n")
         errorLogString.append("pHash: \(pHash)")
         errorLogString.append ("*******************\n")
         self.sendRequest()
@@ -235,7 +244,28 @@ extension WebRequest {
     /// - parameter error:       error which has to send back
     /// - parameter shouldRetry: shouldRetry the request
     func informCompletion(withData data: JSONDictionary?, error: NSError?) {
-            self.completionHandler? (data,error)
+        self.completionHandler? (data,error)
+    }
+}
+
+extension WebRequest : URLSessionDelegate {
+    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        
+        let servertrust = challenge.protectionSpace.serverTrust
+        
+        if let trust = servertrust {
+            let trust_credential = URLCredential.init(trust: trust)
+            if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
+                completionHandler(.useCredential, trust_credential)
+            }
+            else {
+                completionHandler(.performDefaultHandling, trust_credential)
+            }
+        }
+        else {
+            challenge.sender?.cancel(challenge)
+            completionHandler (.cancelAuthenticationChallenge, nil)
+        }
     }
 }
 
@@ -258,8 +288,6 @@ extension WebRequest {
             CCHmac(algo, cKey, cKey.count-1, cData, cData.count-1, &result)
         }
         else {
-            // as @MartinR points out, this is in theory impossible
-            // but personally, I prefer doing this to using `!`
             fatalError("Nil returned when processing input strings as UTF8")
         }
         
