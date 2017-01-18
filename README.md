@@ -32,7 +32,7 @@ AANetworking is a network framework written in Swift 3. The original idea of the
 1. Improving the design
 2. HTML Parsing Support
 3. Handling dependenies in web request
-4. Handling POST request
+4. <del> Handling POST request </del>
 5. Handling No Network
 6. Handling XML request
 7. Handling Image request
