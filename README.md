@@ -3,7 +3,7 @@
 AANetworking is a network framework written in Swift 3. The original idea of the design was inspired by a talk on https://www.objc.io/. The design has been furter extended to and to implement POST Request, Operation Queue. Also the deisgn has been updated 
 
 # Using it in your project
-1. Create a Resource.
+Create a Resource.
     
   ```Swift
   class func movieResource () -> Resource<[Movie]> 
@@ -21,7 +21,7 @@ AANetworking is a network framework written in Swift 3. The original idea of the
         return resource
     }
     ```
-2. Pass that resource to load() of WebServiceOperation class. In the Completion Handler you will either get data or error.
+Pass that resource to load() of WebServiceOperation class. In the Completion Handler you will either get data or error.
   ```Swift
   WebServiceOperation.instantiate().loadJSON(resource) { (data, error) in
             
