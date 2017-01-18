@@ -8,8 +8,7 @@ Create & Pass that resource to loadJSON() of WebServiceOperation class. In the C
   ```Swift
     class func movieResource () -> Resource<[Movie]> 
     {
-        let type : OperationType = .topRated
-        let resource = Resource<[Movie]>(urlString: type.url ,operationType : type, parse: { data in
+        let resource = Resource<[Movie]>(urlString: "www.something.com" ,operationType : type, parse: { data in
             // Parse your model object here and return parsed object
             let json = try? NSJSONSerialization.JSONObjectWithData(data, options: [])
             guard let dictionaries = json as? [String:AnyObject] else { return nil }
