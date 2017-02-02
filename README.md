@@ -8,14 +8,9 @@ Create & Pass that resource to loadJSON() of WebServiceOperation class. In the C
   ```Swift
     class func movieResource () -> Resource<[Movie]> 
     {
-        let resource = Resource<[Movie]>(urlString: "www.something.com" ,operationType : type, parse: { data in
-            // Parse your model object here and return parsed object
-            let json = try? NSJSONSerialization.JSONObjectWithData(data, options: [])
-            guard let dictionaries = json as? [String:AnyObject] else { return nil }
+        let resource = Resource<[Movie]>   (operationType : .topRated , parse: { dictionaries in
             guard let results : [AnyObject] = dictionaries["results"] as? [AnyObject] else { return nil }
-            return results.flatMap() {
-                Movie.init(movieDetails: $0 as! JSONDictionary)
-            }
+            return results as AnyObject?;
         })
         return resource
     }
@@ -24,6 +19,20 @@ Create & Pass that resource to loadJSON() of WebServiceOperation class. In the C
         pritn ("data")
     }
   ```
+URL has to be provided in operationType enum. For example:
+```Swift
+    enum OperationType : String {
+    
+    case topRated = "topRatedMovies"
+    
+    var url : String {
+        switch self {
+        case .topRated:
+            return "www.something.com"
+        }
+    }
+}
+```
 # ToDo
 1. Improving the design
 2. HTML Parsing Support
@@ -32,7 +41,7 @@ Create & Pass that resource to loadJSON() of WebServiceOperation class. In the C
 5. Handling No Network
 6. Handling XML request
 7. Handling Image request
-8. Handling Multipart Request
+8. <del> Handling Multipart Request </del>
 
 
 # License
