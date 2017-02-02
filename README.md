@@ -32,6 +32,7 @@ Create & Pass that resource to loadJSON() of WebServiceOperation class. In the C
 5. Handling No Network
 6. Handling XML request
 7. Handling Image request
+8. Handling Multipart Request
 
 
 # License
