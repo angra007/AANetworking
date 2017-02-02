@@ -15,6 +15,7 @@ final class WebServiceOperation : Operation {
     fileprivate var processDownloadedData : ProcessDownloadCompletionHandler?
     fileprivate var methodType : RequestMethodType?
     fileprivate var contentType : RequestContentType?
+    fileprivate var multipartBoundry : String?
 }
 
 extension WebServiceOperation {
@@ -29,6 +30,7 @@ extension WebServiceOperation {
         contentType = resource.contentType
         completionHandler = completion
         processDownloadedData = resource.parse
+        multipartBoundry = resource.multipartBoundry
         WebServiceManager.sharedManager.addRequest (self)
     }
 }
@@ -56,9 +58,9 @@ extension WebServiceOperation {
             return
         }
         
+        let JSONRequest  : WebRequest! = JSONRequestor ()
         // This is to support GET and POST
         if (self.contentType == .urlEncoded || self.contentType == .json)  {
-            let JSONRequest  : WebRequest! = JSONRequestor ()
             if self.methodType == .get {
                 JSONRequest.getRequest(url!, completion: { (result, error) in
                     self.handleDownloadCompletion(result, error: error)
@@ -69,6 +71,11 @@ extension WebServiceOperation {
                     self.handleDownloadCompletion(result, error: error)
                 })
             }
+        }
+        else if self.contentType == .multipart {
+            JSONRequest.postRequest(withData: postData!, url: url!, contentType: contentType!,boundry : multipartBoundry!,completion:  { [unowned self](result, error) in
+                self.handleDownloadCompletion(result, error: error)
+            })
         }
      }
     

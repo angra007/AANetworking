@@ -135,6 +135,11 @@ class WebRequest : NSObject {
     }
     
     
+    func postRequest (withData data: Data, url : URL, contentType :RequestContentType,boundry : String , completion:@escaping WebRequestorCompletionHandler) {
+        multipartBoundary = boundry
+        postRequest(withData: data, url: url, contentType: contentType, completion: completion)
+    }
+    
     /// This method creates a POST Request
     ///
     /// - parameter data:        Data which has to be sent to the server
