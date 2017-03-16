@@ -29,7 +29,7 @@ public final class WebServiceManager : NSObject {
     public var dataTaskQueue = [URLSessionDataTask]()
     public static let sharedManager = WebServiceManager()
     public var pKey : String! = ""
-    
+    public var cookie : String! = ""
     deinit {
         cancelAllRequests()
     }

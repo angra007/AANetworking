@@ -177,16 +177,16 @@ class WebRequest : NSObject {
     /// - parameter contentType: Content Type of the request
     /// - parameter completion:  This completion handler is called after we receive the data or error back from server
     func postRequest (withData data: Data, url : URL, contentType :RequestContentType, completion:@escaping WebRequestorCompletionHandler) {
+
         var sessionID : String? = nil
+        var privateKey : String! = nil
         
-        let sessionIDs = HTTPCookieStorage.shared.cookies(for: url)
-        if let cookie = sessionIDs?.last {
-            sessionID =  "JSESSIONID=\(cookie.value) Path=\(cookie.path) Secure"
+        if WebServiceManager.sharedManager.pKey != "" {
+            privateKey  =  WebServiceManager.sharedManager.pKey
         }
         
-        var privateKey : String! = nil
-        if WebServiceManager.sharedManager.pKey != nil {
-            privateKey  =  WebServiceManager.sharedManager.pKey
+        if WebServiceManager.sharedManager.cookie != "" {
+            sessionID  =  WebServiceManager.sharedManager.cookie
         }
         
         var pHash : String! = nil
