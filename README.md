@@ -3,16 +3,16 @@
 AANetworking is a network framework written in Swift 3. The original idea of the design was inspired by a talk on https://www.objc.io/. However, the design has been simplified and extended to and to implement POST Request, Multipart, AES256 and a lot more.
 
 # Using it in your project
-If you need session and AES256 in your app, pass your cookies to 
+If you need maintaine session your app, pass your cookies to 
 ```
 Swift WebServiceManager.sharedManager.cookie
 ``` 
-and pKey to 
+for and AES256 pass pKey to 
 ```
 Swift WebServiceManager.sharedManager.pKey
 ``` 
-To send a request create a file similar to NetworkHelper.swift.d
-d
+To send a request create a file similar to ```NetworkHelper.swift```
+
 Extract the data  ```WebServiceOperation``` to be saved in model in. Change implementation of  ```handleDownloadCompletion  ``` according to your response keys to extract data and status. 
 
 Example of Usage: 
