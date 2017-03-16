@@ -87,8 +87,9 @@ extension WebServiceOperation {
         
         
         if let result = result {
-            guard let results : [String:AnyObject] = result["data"] as? [String:AnyObject] else {  return }
-            guard let status : String = results["status"] as? String else { return }
+            // Your logic to get data and status
+            guard let results : [String:AnyObject] = result[""] as? [String:AnyObject] else {  return }
+            guard let status : String = results[""] as? String else { return }
             currentStatus = status
             object = self.processDownloadedData?(result)
         }
