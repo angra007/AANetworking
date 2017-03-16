@@ -18,7 +18,7 @@ struct Movie {
 }
 
 extension Movie {
-    init? (movieDetails : JSONDictionary ) {
+    init? (movieDetails : [String:AnyObject] ) {
         guard let overView = movieDetails["overview"] as? String,
             let releaseData = movieDetails["release_date"] as? String,
             let originalTitle = movieDetails["original_title"] as? String,

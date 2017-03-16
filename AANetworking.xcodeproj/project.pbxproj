@@ -7,16 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		DE12C99B1D9A329D00DDE37D /* JSONRequestor.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE12C99A1D9A329D00DDE37D /* JSONRequestor.swift */; };
-		DE230A2D1D99018200571BDB /* WebRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE230A2C1D99018200571BDB /* WebRequest.swift */; };
 		DE5096D21D8F7FE80002196A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5096D01D8F7FE80002196A /* AppDelegate.swift */; };
 		DE5096D31D8F7FE80002196A /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DE5096D11D8F7FE80002196A /* Info.plist */; };
 		DE5096D51D8F80220002196A /* Episode.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5096D41D8F80220002196A /* Episode.swift */; };
 		DE5096D71D8F802B0002196A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5096D61D8F802B0002196A /* ViewController.swift */; };
-		DE5096DB1D8F80660002196A /* WebRequeseResources.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5096D81D8F80650002196A /* WebRequeseResources.swift */; };
-		DE5096DC1D8F80660002196A /* WebServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5096D91D8F80650002196A /* WebServiceManager.swift */; };
-		DE5096DD1D8F80660002196A /* WebServiceOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5096DA1D8F80650002196A /* WebServiceOperation.swift */; };
-		DE5096E11D8F808E0002196A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5096E01D8F808E0002196A /* Constants.swift */; };
 		DEF4E5FD1D6C29160022992C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DEF4E5FB1D6C29160022992C /* Main.storyboard */; };
 		DEF4E5FF1D6C29160022992C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DEF4E5FE1D6C29160022992C /* Assets.xcassets */; };
 		DEF4E6021D6C29160022992C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DEF4E6001D6C29160022992C /* LaunchScreen.storyboard */; };
@@ -25,6 +19,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		BCD4FD7C1E7A5E4B00F593AC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BCD4FD521E7A5A8300F593AC /* WebService.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BCD4FD381E7A5A7300F593AC;
+			remoteInfo = WebService;
+		};
+		BCD4FD7E1E7A5E4B00F593AC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BCD4FD521E7A5A8300F593AC /* WebService.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BCD4FD411E7A5A7300F593AC;
+			remoteInfo = WebServiceTests;
+		};
 		DEF4E6091D6C29160022992C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = DEF4E5EC1D6C29160022992C /* Project object */;
@@ -41,17 +49,25 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		BCD4FD5F1E7A5AB500F593AC /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
-		DE12C99A1D9A329D00DDE37D /* JSONRequestor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JSONRequestor.swift; path = WebService/JSONRequestor.swift; sourceTree = "<group>"; };
-		DE230A2C1D99018200571BDB /* WebRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebRequest.swift; path = WebService/WebRequest.swift; sourceTree = "<group>"; };
+		BCD4FD521E7A5A8300F593AC /* WebService.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = WebService.xcodeproj; path = AANetworking/WebService/WebService/WebService.xcodeproj; sourceTree = "<group>"; };
 		DE5096D01D8F7FE80002196A /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Root/AppDelegate.swift; sourceTree = "<group>"; };
 		DE5096D11D8F7FE80002196A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Root/Info.plist; sourceTree = "<group>"; };
 		DE5096D41D8F80220002196A /* Episode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Episode.swift; path = AANetworking/Example/Model/Episode.swift; sourceTree = "<group>"; };
 		DE5096D61D8F802B0002196A /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ViewController.swift; path = AANetworking/Example/Controller/ViewController.swift; sourceTree = "<group>"; };
-		DE5096D81D8F80650002196A /* WebRequeseResources.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebRequeseResources.swift; path = WebService/WebRequeseResources.swift; sourceTree = "<group>"; };
-		DE5096D91D8F80650002196A /* WebServiceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebServiceManager.swift; path = WebService/WebServiceManager.swift; sourceTree = "<group>"; };
-		DE5096DA1D8F80650002196A /* WebServiceOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebServiceOperation.swift; path = WebService/WebServiceOperation.swift; sourceTree = "<group>"; };
-		DE5096E01D8F808E0002196A /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Constants.swift; path = Utility/Constants.swift; sourceTree = "<group>"; };
 		DED0183E1D745EF8009311D2 /* AANetworking-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AANetworking-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
 		DEF4E5F41D6C29160022992C /* AANetworking.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AANetworking.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DEF4E5FC1D6C29160022992C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -90,6 +106,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BCD4FD781E7A5E4B00F593AC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BCD4FD7D1E7A5E4B00F593AC /* WebService.framework */,
+				BCD4FD7F1E7A5E4B00F593AC /* WebServiceTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		DE1BB02E1D8694D400E8A814 /* Example */ = {
 			isa = PBXGroup;
 			children = (
@@ -119,7 +144,7 @@
 		DEF4E5EB1D6C29160022992C = {
 			isa = PBXGroup;
 			children = (
-				DEF4E6251D6C29670022992C /* WebService */,
+				BCD4FD521E7A5A8300F593AC /* WebService.xcodeproj */,
 				DEF694491D6CDD2400CDBB6D /* Utilities */,
 				DE1BB02E1D8694D400E8A814 /* Example */,
 				DEF4E5F61D6C29160022992C /* Root */,
@@ -170,23 +195,9 @@
 			path = AANetworkingUITests;
 			sourceTree = "<group>";
 		};
-		DEF4E6251D6C29670022992C /* WebService */ = {
-			isa = PBXGroup;
-			children = (
-				DE5096D81D8F80650002196A /* WebRequeseResources.swift */,
-				DE5096DA1D8F80650002196A /* WebServiceOperation.swift */,
-				DE5096D91D8F80650002196A /* WebServiceManager.swift */,
-				DE230A2C1D99018200571BDB /* WebRequest.swift */,
-				DE12C99A1D9A329D00DDE37D /* JSONRequestor.swift */,
-			);
-			name = WebService;
-			path = AANetworking;
-			sourceTree = "<group>";
-		};
 		DEF694491D6CDD2400CDBB6D /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				DE5096E01D8F808E0002196A /* Constants.swift */,
 			);
 			name = Utilities;
 			path = AANetworking;
@@ -202,6 +213,7 @@
 				DEF4E5F01D6C29160022992C /* Sources */,
 				DEF4E5F11D6C29160022992C /* Frameworks */,
 				DEF4E5F21D6C29160022992C /* Resources */,
+				BCD4FD5F1E7A5AB500F593AC /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -285,6 +297,12 @@
 			mainGroup = DEF4E5EB1D6C29160022992C;
 			productRefGroup = DEF4E5F51D6C29160022992C /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = BCD4FD781E7A5E4B00F593AC /* Products */;
+					ProjectRef = BCD4FD521E7A5A8300F593AC /* WebService.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				DEF4E5F31D6C29160022992C /* AANetworking */,
@@ -293,6 +311,23 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		BCD4FD7D1E7A5E4B00F593AC /* WebService.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = WebService.framework;
+			remoteRef = BCD4FD7C1E7A5E4B00F593AC /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		BCD4FD7F1E7A5E4B00F593AC /* WebServiceTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = WebServiceTests.xctest;
+			remoteRef = BCD4FD7E1E7A5E4B00F593AC /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		DEF4E5F21D6C29160022992C /* Resources */ = {
@@ -327,15 +362,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DE230A2D1D99018200571BDB /* WebRequest.swift in Sources */,
 				DE5096D21D8F7FE80002196A /* AppDelegate.swift in Sources */,
-				DE5096DC1D8F80660002196A /* WebServiceManager.swift in Sources */,
 				DE5096D51D8F80220002196A /* Episode.swift in Sources */,
-				DE5096DD1D8F80660002196A /* WebServiceOperation.swift in Sources */,
 				DE5096D71D8F802B0002196A /* ViewController.swift in Sources */,
-				DE5096DB1D8F80660002196A /* WebRequeseResources.swift in Sources */,
-				DE12C99B1D9A329D00DDE37D /* JSONRequestor.swift in Sources */,
-				DE5096E11D8F808E0002196A /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
