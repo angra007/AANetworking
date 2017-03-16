@@ -1,10 +1,25 @@
 //
-//  WebRequest.swift
-//  AANetworking
+// WebRequest.swift
+// https://github.com/angra007/AANetworking
+// Copyright (c) 2013-16 Ankit Angra.
 //
-//  Created by Ankit Angra on 26/09/16.
-//  Copyright © 2016 Ankit Angra. All rights reserved.
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 //
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
 
 import Foundation
 
@@ -17,6 +32,8 @@ class WebRequest : NSObject {
     fileprivate var startDate : Date!
     fileprivate var completionHandler : WebRequestorCompletionHandler?
     fileprivate var retryCount = 0
+    fileprivate var currentTask : URLSessionDataTask!
+    
     
     fileprivate var maximunNumberOfRetry : Int {
         get {
@@ -32,21 +49,27 @@ class WebRequest : NSObject {
     
     lazy var downloadsSession: URLSession = {
         let configuration = URLSessionConfiguration.default
-        let session = URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)
+        let session = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
         return session
     }()
-    
     
     /// This method hits the server with the request constructed by the caller
     func sendRequest () {
         startDate = Date()
         
-        downloadsSession.dataTask(with: self.request as URLRequest, completionHandler: { (data, response, error) in
+        currentTask = downloadsSession.dataTask(with: self.request as URLRequest, completionHandler: { (data, response, error) in
             let timeSpent = Date().timeIntervalSince(self.startDate)
             self.errorLogString.append ("Time Spent for the Request \(String(describing: self.requestURL!)) is \(timeSpent) \n")
             self.errorLogString.append ("*******************\n")
             let result = self.validateYourself(data, error: error as NSError?)
-            let validator = self.handleInvalidResponseFromServer(result.data!)
+            
+            var validator : (error : NSError?,shouldRetry : Bool) = (nil,false)
+            if let data = result.data {
+                validator = self.handleInvalidResponseFromServer(data)
+            }
+            
+            //            let log = WANDErrorLogModel.init(string: self.errorLogString as String!, shouldBeDeleted: true, shouldSendToServer: false)
+            //            WandErrorHandlerUtility.sharedRequestWebServiceErrorHandlerUtilities().savelog(log)
             print(self.errorLogString)
             
             if result.error != nil || validator.error != nil {
@@ -65,9 +88,15 @@ class WebRequest : NSObject {
             else {
                 self.informCompletion(withData: result.data, error: validator.error)
             }
-        }) .resume()
+        })
+        WebServiceManager.sharedManager.addTask(currentTask)
+        currentTask.resume()
     }
     
+    /// This method has to be handled by the base class to support savind of the logs
+    func saveLog () {
+        
+    }
     
     /// This method has to be handled by the base class to support any kind of retry
     func handleRetry () {
@@ -84,7 +113,6 @@ class WebRequest : NSObject {
         return (nil,false)
     }
     
-    
     /// This method validated the response from the Server
     ///
     /// - parameter data:  This is the raw date we receive from the Server
@@ -92,9 +120,9 @@ class WebRequest : NSObject {
     ///
     /// - returns: If the validation was successful data parameter will have the JSON. If there was error while validating them, respected error will go in error parameter. shouldRetry will denote if we have to send a retry request or not.
     func validateYourself (_ data : Data?, error : NSError?) -> (data : JSONDictionary?,error : NSError?,shouldRetry : Bool)  {
-        func validateJSON (withData data : Data) throws -> AnyObject {
+        func validateJSON (withData data : Data) throws -> AnyObject? {
             let json = try? JSONSerialization.jsonObject(with: data, options: [])
-            return json! as AnyObject
+            return json as? AnyObject
         }
         
         if error != nil {
@@ -108,17 +136,25 @@ class WebRequest : NSObject {
         if data == nil {
             self.errorLogString.append ("Response is Nil\n")
             self.errorLogString.append ("*******************\n")
-            self.errorLogString.append ("Response for URL \(String(describing: self.requestURL)) is NULL \n")
+            let url = String(describing: self.requestURL)
+            self.errorLogString.append ("Response for URL \(url) is NULL \n")
             let dataError =  NSError (domain: "NoDataAvailable",code: -99,userInfo: [NSLocalizedDescriptionKey: "No data available"])
             return (nil,dataError,true)
         }
         
-        let response : AnyObject
+        let response : AnyObject?
         
         do {
             let json = try validateJSON (withData: data!)
-            response = json
-            self.errorLogString.append ("Response for URL \(String(describing: self.requestURL)) is \(json) \n")
+            
+            if let validJSON = json {
+                response = validJSON
+            }
+            else {
+                response = nil
+            }
+            
+            self.errorLogString.append ("Response for URL \(self.requestURL.absoluteString) is \(json!) \n")
         }
         catch let error as NSError {
             response = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!
@@ -134,12 +170,6 @@ class WebRequest : NSObject {
         return (dictionaries,nil,false)
     }
     
-    
-    func postRequest (withData data: Data, url : URL, contentType :RequestContentType,boundry : String , completion:@escaping WebRequestorCompletionHandler) {
-        multipartBoundary = boundry
-        postRequest(withData: data, url: url, contentType: contentType, completion: completion)
-    }
-    
     /// This method creates a POST Request
     ///
     /// - parameter data:        Data which has to be sent to the server
@@ -147,18 +177,43 @@ class WebRequest : NSObject {
     /// - parameter contentType: Content Type of the request
     /// - parameter completion:  This completion handler is called after we receive the data or error back from server
     func postRequest (withData data: Data, url : URL, contentType :RequestContentType, completion:@escaping WebRequestorCompletionHandler) {
-        let sessionID : String? = "Your Cookie"
-        let privateKey : String? = "Your Private Key"
+
+        var sessionID : String? = nil
+        var privateKey : String! = nil
+        
+        if WebServiceManager.sharedManager.pKey != "" {
+            privateKey  =  WebServiceManager.sharedManager.pKey
+        }
+        
+        if WebServiceManager.sharedManager.cookie != "" {
+            sessionID  =  WebServiceManager.sharedManager.cookie
+        }
         
         var pHash : String! = nil
         var postData : Data
-        let timeStamp = Date().timeIntervalSince1970
+        let timeStamp = Int (Date().timeIntervalSince1970)
         requestURL = url
         
         completionHandler = completion
         request =  NSMutableURLRequest.init(url: url, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: timeOut)
         request.httpMethod = "POST"
-        request.setValue(String(data.count), forHTTPHeaderField: "Content-Length")
+        
+        if contentType == .urlEncoded {
+            var datastring = String(data: data, encoding: String.Encoding.utf8)
+            
+            if privateKey != nil {
+                datastring = "dtm=\(timeStamp)" + datastring!
+            }
+            else {
+                datastring = datastring!
+            }
+            postData = (datastring?.data(using: String.Encoding.utf8))!
+        }
+        else {
+            postData = data
+        }
+        
+        request.setValue(String(postData.count), forHTTPHeaderField: "Content-Length")
         var headerContentType : String
         switch  contentType {
         case .urlEncoded :
@@ -172,24 +227,15 @@ class WebRequest : NSObject {
         }
         request.setValue(headerContentType, forHTTPHeaderField: "Content-Type")
         
-        if sessionID != nil
-        {
-            request.setValue(sessionID, forHTTPHeaderField: "Cookie")
-        }
+        //        if let id = sessionID
+        //        {
+        //            request.setValue(id, forHTTPHeaderField: "Cookie")
+        //        }
         
-        if privateKey != nil {
+        if let key = privateKey {
             let timeInterval = String (timeStamp)
-            pHash = generateHMAC(key:privateKey! , data: timeInterval)
-            request.setValue(pHash, forHTTPHeaderField: "pHash")
-        }
-        
-        if contentType == .urlEncoded {
-            var datastring = String(data: data, encoding: String.Encoding.utf8)
-            datastring =  "dtm=\(timeStamp)" + datastring!
-            postData = (datastring?.data(using: String.Encoding.utf8))!
-        }
-        else {
-            postData = data
+            pHash =  NetworkUtility.hashedBase64Value(ofData: timeInterval, withKey: key)
+            request.setValue(pHash!, forHTTPHeaderField: "pHash")
         }
         
         request.httpBody = postData
@@ -197,9 +243,16 @@ class WebRequest : NSObject {
         errorLogString.append ("*******************\n")
         errorLogString.append("Request Type: POST \n")
         errorLogString.append("Url: \(String(describing: url))\n")
-        errorLogString.append("Cookie: \(String(describing: sessionID)) \n")
-        errorLogString.append("pHash: \(pHash)")
-        errorLogString.append("Body: \(String(data: postData, encoding: String.Encoding.utf8))")
+        if let id = sessionID {
+            errorLogString.append("Cookie: \(id) \n")
+        }
+        
+        if  privateKey != nil {
+            errorLogString.append("pHash: \(pHash!) \n")
+            
+        }
+        errorLogString.append("HeaderContentType: \(headerContentType) \n")
+        errorLogString.append("Body: \(String(data: postData, encoding: String.Encoding.utf8)!) \n")
         errorLogString.append ("*******************\n")
         self.sendRequest()
     }
@@ -211,45 +264,51 @@ class WebRequest : NSObject {
     /// - parameter completion: This completion handler is called after we receive the data or error back from server
     func getRequest (_ url : URL, completion: @escaping WebRequestorCompletionHandler) {
         
-        let sessionID : String? = "Your Cookie"
-        let privateKey : String? = "Your Private Key"
+        var sessionID : String? = nil
         
+        let sessionIDs = HTTPCookieStorage.shared.cookies(for: url)
+        if let cookie = sessionIDs?.last {
+            sessionID =  "JSESSIONID=\(cookie.value) Path=\(cookie.path) Secure"
+        }
         
+        var privateKey : String! = nil
+        if WebServiceManager.sharedManager.pKey != nil {
+            privateKey  = WebServiceManager.sharedManager.pKey
+        }
         var pHash : String! = nil
-        let timeStamp = Date().timeIntervalSince1970
+        let timeStamp = Int (Date().timeIntervalSince1970 )
+        
+        let getURL = URL.init(string: url.absoluteString + "dtm=\(timeStamp)")!
+        
         
         completionHandler = completion
-        request =  NSMutableURLRequest.init(url: url, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: timeOut)
+        request =  NSMutableURLRequest.init(url: getURL, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: timeOut)
         request.httpMethod = "GET"
         let headerContentType = "application/x-www-form-urlencoded"
         request.setValue(headerContentType, forHTTPHeaderField: "Content-Type")
-        request.setValue(sessionID, forHTTPHeaderField: "Cookie")
-        requestURL = url
+        requestURL = getURL
         
-        if privateKey != nil {
+        //        if let id = sessionID
+        //        {
+        //            request.setValue(id, forHTTPHeaderField: "Cookie")
+        //        }
+        
+        if let key = privateKey {
             let timeInterval = String (timeStamp)
-            pHash = generateHMAC(key:privateKey! , data: timeInterval)
-            request.setValue(pHash, forHTTPHeaderField: "pHash")
+            pHash =  NetworkUtility.hashedBase64Value(ofData: timeInterval, withKey: key)
+            request.setValue(pHash!, forHTTPHeaderField: "pHash")
         }
         
         errorLogString.append ("*******************\n")
         errorLogString.append("Request Type: GET \n")
-        errorLogString.append("Url: \(String(describing: url))\n")
-        errorLogString.append("Cookie: \(String(describing: sessionID)) \n")
-        errorLogString.append("pHash: \(pHash)")
+        errorLogString.append("Url: \(String(describing: getURL))\n")
+        if let id = sessionID {
+            errorLogString.append("Cookie: \(id) \n")
+        }
+        
+        errorLogString.append("pHash: \(pHash!)\n")
         errorLogString.append ("*******************\n")
         self.sendRequest()
-    }
-}
-
-extension WebRequest {
-    /// This is the method which will call the completion Handler
-    ///
-    /// - parameter data:        data which has to send back
-    /// - parameter error:       error which has to send back
-    /// - parameter shouldRetry: shouldRetry the request
-    func informCompletion(withData data: JSONDictionary?, error: NSError?) {
-        self.completionHandler? (data,error)
     }
 }
 
@@ -275,31 +334,14 @@ extension WebRequest : URLSessionDelegate {
 }
 
 extension WebRequest {
-    
-    
-    /// This method genrates the pHash sent to the server
+    /// This is the method which will call the completion Handler
     ///
-    /// - parameter key:  dtm to genrate pHash
-    /// - parameter data: private key to genrate pHash
-    func generateHMAC(key: String, data: String) -> String {
-        
-        var result: [CUnsignedChar]
-        if let cKey = key.cString(using: String.Encoding.utf8),
-            let cData = data.cString(using: String.Encoding.utf8)
-        {
-            let algo  = CCHmacAlgorithm(kCCHmacAlgSHA512)
-            result = Array(repeating: 0, count: Int(CC_SHA512_DIGEST_LENGTH))
-            
-            CCHmac(algo, cKey, cKey.count-1, cData, cData.count-1, &result)
-        }
-        else {
-            fatalError("Nil returned when processing input strings as UTF8")
-        }
-        
-        let outputData = NSData(bytes: result as [UInt8], length: result.count * MemoryLayout<CUnsignedChar>.size )
-        
-        let encodedData = outputData.base64EncodedData(options: [.endLineWithLineFeed])
-        return String(data: encodedData, encoding: String.Encoding.utf8)!
+    /// - parameter data:        data which has to send back
+    /// - parameter error:       error which has to send back
+    /// - parameter shouldRetry: shouldRetry the request
+    func informCompletion(withData data: JSONDictionary?, error: NSError?) {
+        WebServiceManager.sharedManager.removeTask(currentTask)
+        self.completionHandler? (data,error,errorLogString)
     }
 }
 

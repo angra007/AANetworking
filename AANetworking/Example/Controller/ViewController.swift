@@ -13,16 +13,15 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
-        let movieResource = WebRequestResources.movieResource()
-        let webservice = WebServiceOperation()
-        webservice.loadJSON(movieResource) { (data, error) in
-//            guard let movie = (data as? [Movie]) else {
-//                // Display Some Error
-//                return }
-            print(data)
+
+        NetworkHelper.load(url: "url", parse: { (dict) -> AnyObject? in
+            // This is your parser. Return modeled data from here
+            
+            return dict as? AnyObject
+        }) { (data, error) in
+            
+            // This is your completion handler
         }
-        
     }
 
     override func didReceiveMemoryWarning() {
@@ -31,17 +30,7 @@ class ViewController: UIViewController {
     }
 }
 
-class WebRequestResources {
-    
-    class func movieResource () -> Resource<[Movie]> {
-        let resource = Resource<[Movie]>   (operationType : .topRated, parse: { dictionaries in
-            guard let results : [AnyObject] = dictionaries["results"] as? [AnyObject] else { return nil }
-            return results as AnyObject?;
-        })
-        return resource
-    }
-    
-}
+
 
 
 
