@@ -18,7 +18,7 @@ class ViewController: UIViewController {
             // This is your parser. Return modeled data from here
             
             return dict as? AnyObject
-        }) { (data, error, status) in
+        }) { (data, error) in
             
             // This is your completion handler
         }
