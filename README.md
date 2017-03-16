@@ -13,7 +13,7 @@ Swift WebServiceManager.sharedManager.pKey
 ``` 
 To send a request create a file similar to ```NetworkHelper.swift```
 
-Extract the data  ```WebServiceOperation``` to be saved in model in. Change implementation of  ```handleDownloadCompletion  ``` according to your response keys to extract data and status. 
+Data is extracted in  ```WebServiceOperation``` to be saved in model. Change implementation of  ```handleDownloadCompletion  ``` according to extract data and status from your response. 
 
 Example of Usage: 
   ```Swift
