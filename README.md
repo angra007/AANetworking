@@ -1,38 +1,32 @@
 # AANetworking
 
-AANetworking is a network framework written in Swift 3. The original idea of the design was inspired by a talk on https://www.objc.io/. The design has been furter extended to and to implement POST Request, Operation Queue. Also the deisgn has been updated 
+AANetworking is a network framework written in Swift 3. The original idea of the design was inspired by a talk on https://www.objc.io/. However, the design has been simplified and extended to and to implement POST Request, Multipart, AES256 and a lot more.
 
 # Using it in your project
-Create & Pass that resource to loadJSON() of WebServiceOperation class. In the Completion Handler you will either get data or error.
-    
-  ```Swift
-    class func movieResource () -> Resource<[Movie]> 
-    {
-        let resource = Resource<[Movie]>   (operationType : .topRated , parse: { dictionaries in
-            guard let results : [AnyObject] = dictionaries["results"] as? [AnyObject] else { return nil }
-            return results as AnyObject?;
-        })
-        return resource
-    }
-    
-    WebServiceOperation.instantiate().loadJSON(resource) { (data, error) in
-        pritn ("data")
-    }
-  ```
-URL has to be provided in operationType enum. For example:
-```Swift
-    enum OperationType : String {
-    
-    case topRated = "topRatedMovies"
-    
-    var url : String {
-        switch self {
-        case .topRated:
-            return "www.something.com"
-        }
-    }
-}
+If you need session and AES256 in your app, pass your cookies to 
 ```
+Swift WebServiceManager.sharedManager.cookie
+``` 
+and pKey to 
+```
+Swift WebServiceManager.sharedManager.pKey
+``` 
+To send a request create a file similar to NetworkHelper.swift.d
+d
+Extract the data  ```WebServiceOperation``` to be saved in model in. Change implementation of  ```handleDownloadCompletion  ``` according to your response keys to extract data and status. 
+
+Example of Usage: 
+  ```Swift
+   NetworkHelper.load(url: "url", parse: { (dict) -> AnyObject? in
+            // This is your parser. Return modeled data from here
+            
+            return dict as? AnyObject
+        }) { (data, error) in
+            
+            // This is your completion handler
+        }
+  ```
+
 # ToDo
 1. Improving the design
 2. HTML Parsing Support
