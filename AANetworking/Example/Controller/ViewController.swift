@@ -14,14 +14,16 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
 
-//        NetworkHelper.load(url: "url", parse: { (dict) -> AnyObject? in
-//            // This is your parser. Return modeled data from here
-//            
-//            return dict as? AnyObject
-//        }) { (data, error) in
-//            
-//            // This is your completion handler
-//        }
+        NetworkHelper.get(url: "url", parse: { (dict) -> AnyObject? in
+            // This is your parser. Return modeled data from here
+            
+            return dict as? AnyObject
+        }) { (data, error) in
+            
+            // This is your completion handler
+        }
+        
+        
     }
 
     override func didReceiveMemoryWarning() {
