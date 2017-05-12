@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		BCD4FD821E7A5FA300F593AC /* NetworkHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD4FD811E7A5FA300F593AC /* NetworkHelper.swift */; };
+		BCD4FD821E7A5FA300F593AC /* DownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD4FD811E7A5FA300F593AC /* DownloadManager.swift */; };
 		BCF11EA01EC58C6200F7A0B8 /* WebService.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCD4FD7D1E7A5E4B00F593AC /* WebService.framework */; };
 		DE5096D21D8F7FE80002196A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5096D01D8F7FE80002196A /* AppDelegate.swift */; };
 		DE5096D31D8F7FE80002196A /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DE5096D11D8F7FE80002196A /* Info.plist */; };
@@ -66,7 +66,7 @@
 
 /* Begin PBXFileReference section */
 		BCD4FD521E7A5A8300F593AC /* WebService.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = WebService.xcodeproj; path = AANetworking/WebService/WebService/WebService.xcodeproj; sourceTree = "<group>"; };
-		BCD4FD811E7A5FA300F593AC /* NetworkHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NetworkHelper.swift; path = AANetworking/Utility/NetworkHelper.swift; sourceTree = "<group>"; };
+		BCD4FD811E7A5FA300F593AC /* DownloadManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DownloadManager.swift; path = AANetworking/Utility/DownloadManager.swift; sourceTree = "<group>"; };
 		DE5096D01D8F7FE80002196A /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Root/AppDelegate.swift; sourceTree = "<group>"; };
 		DE5096D11D8F7FE80002196A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Root/Info.plist; sourceTree = "<group>"; };
 		DE5096D41D8F80220002196A /* Episode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Episode.swift; path = AANetworking/Example/Model/Episode.swift; sourceTree = "<group>"; };
@@ -139,7 +139,7 @@
 		DE1BB0321D86968D00E8A814 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				BCD4FD811E7A5FA300F593AC /* NetworkHelper.swift */,
+				BCD4FD811E7A5FA300F593AC /* DownloadManager.swift */,
 				DE5096D61D8F802B0002196A /* ViewController.swift */,
 			);
 			name = Controller;
@@ -356,7 +356,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BCD4FD821E7A5FA300F593AC /* NetworkHelper.swift in Sources */,
+				BCD4FD821E7A5FA300F593AC /* DownloadManager.swift in Sources */,
 				DE5096D21D8F7FE80002196A /* AppDelegate.swift in Sources */,
 				DE5096D51D8F80220002196A /* Episode.swift in Sources */,
 				DE5096D71D8F802B0002196A /* ViewController.swift in Sources */,
