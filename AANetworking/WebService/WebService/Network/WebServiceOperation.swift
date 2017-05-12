@@ -24,27 +24,12 @@
 import Foundation
 
 open class WebServiceOperation {
-
     var url : String?
     var postData : Data?
     var completionHandler : WebServiceCompletionHandler?
     var processDownloadedData : ProcessDownloadCompletionHandler?
     var methodType : RequestMethodType?
     var contentType : RequestContentType?
-    
-//    public init <A> (_ resource: Resource<A>) {
-//        url = resource.urlString
-//        postData = resource.data as Data?
-//        methodType = resource.methodType
-//        contentType = resource.contentType
-//        processDownloadedData = resource.parse
-//    }
-//    
-    
-    public init() {}
-    deinit {
-        print ("WebServiceOperation dealloc called")
-    }
 }
 
 extension WebServiceOperation {
@@ -131,12 +116,6 @@ extension WebServiceOperation {
     func informCompletion(withData result: AnyObject?, error: NSError?, log : NSString, status : String?) {
         DispatchQueue.main.async {  
             self.completionHandler? (result,error,log,status)
-//            self.contentType = nil
-//            self.methodType = nil
-//            self.processDownloadedData = nil
-//            self.completionHandler = nil
-//            self.postData = nil
-//            self.url = nil
         }
     }
 }

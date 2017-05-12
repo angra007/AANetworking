@@ -52,7 +52,6 @@ extension WebServiceManager {
             return false
         }
     }
-
     
     public func cancelAllRequests () {
         dataTaskQueue = dataTaskQueue.filter() {

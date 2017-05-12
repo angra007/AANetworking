@@ -25,13 +25,8 @@ import Foundation
 
 class JSONRequestor : WebRequest {
     
-    
     override init() {
         super.init()
-    }
-    
-    deinit {
-        print ("JSONRequestor dealloc called")
     }
     
     override func handleInvalidResponseFromServer(_ response: JSONDictionary) -> (error: NSError?, shouldRetry: Bool) {
@@ -55,7 +50,5 @@ class JSONRequestor : WebRequest {
     }
     
     override func saveLog () {
-//        let log = WANDErrorLogModel.init(string: self.errorLogString as String!, shouldBeDeleted: false, shouldSendToServer: false)
-//        WandErrorHandlerUtility.sharedRequestWebServiceErrorHandlerUtilities().savelog(log)
     }
 }

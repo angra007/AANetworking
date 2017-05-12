@@ -53,10 +53,6 @@ class WebRequest : NSObject {
         return session
     }()
     
-    deinit {
-        print ("WebRequest dealloc called")
-    }
-    
     /// This method hits the server with the request constructed by the caller
     func sendRequest () {
         startDate = Date()
@@ -72,8 +68,6 @@ class WebRequest : NSObject {
                 validator = self.handleInvalidResponseFromServer(data)
             }
             
-//            let log = WANDErrorLogModel.init(string: self.errorLogString as String!, shouldBeDeleted: true, shouldSendToServer: false)
-//            WandErrorHandlerUtility.sharedRequestWebServiceErrorHandlerUtilities().savelog(log)
             print(self.errorLogString)
             
             if result.error != nil || validator.error != nil {
@@ -239,11 +233,6 @@ class WebRequest : NSObject {
         }
         request.setValue(headerContentType, forHTTPHeaderField: "Content-Type")
         
-//        if let id = sessionID
-//        {
-//            request.setValue(id, forHTTPHeaderField: "Cookie")
-//        }
-        
         if let key = privateKey {
             let timeInterval = String (timeStamp)
             pHash =  NetworkUtility.hashedBase64Value(ofData: timeInterval, withKey: key)
@@ -299,12 +288,7 @@ class WebRequest : NSObject {
         let headerContentType = "application/x-www-form-urlencoded"
         request.setValue(headerContentType, forHTTPHeaderField: "Content-Type")
         requestURL = getURL
-        
-//        if let id = sessionID
-//        {
-//            request.setValue(id, forHTTPHeaderField: "Cookie")
-//        }
-        
+
         if let key = privateKey {
             let timeInterval = String (timeStamp)
             pHash =  NetworkUtility.hashedBase64Value(ofData: timeInterval, withKey: key)

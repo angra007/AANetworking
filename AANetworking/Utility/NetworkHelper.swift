@@ -24,41 +24,35 @@
 import Foundation
 import WebService
 
-class NetworkHelper {
-    
+class DownloadManager <Type> {
     
     class func get (url : String, parse : @escaping ProcessDownloadCompletionHandler, completion : @escaping ((AnyObject?, NSError?) -> Void) ) {
-        let resource = Resource<Any> (url : url, parse: parse)
-        NetworkHelper.sendRequest(resource,completion: completion)
+        let resource = Resource<Type> (url : url, parse: parse)
+        DownloadManager.sendRequest(resource,completion: completion)
     }
     
     class func post (url : String, contentType : RequestContentType,data : Data, parse : @escaping ProcessDownloadCompletionHandler, completion : @escaping ((AnyObject?, NSError?) -> Void) ) {
-        let resource = Resource<Any> (url : url, contentType: contentType, postData: data, parse: parse)
-        NetworkHelper.sendRequest(resource,completion: completion)
+        let resource = Resource<Type> (url : url, contentType: contentType, postData: data, parse: parse)
+        DownloadManager.sendRequest(resource,completion: completion)
     }
     
     class func post (url : String, data : Data,multipartBoundry : String, parse : @escaping ProcessDownloadCompletionHandler, completion : @escaping ((AnyObject?, NSError?) -> Void) ) {
-        let resource = Resource<Any> (url : url, postData: data, multipartBoundry: multipartBoundry, parse: parse)
-        NetworkHelper.sendRequest(resource,completion: completion)
+        let resource = Resource<Type> (url : url, postData: data, multipartBoundry: multipartBoundry, parse: parse)
+        DownloadManager.sendRequest(resource,completion: completion)
     }
     
-    class func sendRequest <A>(_ resource: Resource<A>, completion:@escaping ((AnyObject?, NSError?) -> Void)) {
-       
+    class func sendRequest (_ resource: Resource<Type>, completion:@escaping ((AnyObject?, NSError?) -> Void)) {
         let webServce : WebServiceOperation! = WebServiceOperation ()
         webServce.loadJSON(resource) { (data, error, log,currentStatus) in
             
         }
     }
-
     
     class func cancelRequest (forUrl url: String) {
-    
         WebServiceManager.sharedManager.removeTaskFromQueue(withUrl: url)
-    
     }
 
     class func cancelAllRequest () {
         WebServiceManager.sharedManager.cancelAllRequests()
     }
-    
 }
