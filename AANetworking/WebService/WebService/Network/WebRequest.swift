@@ -1,25 +1,10 @@
 //
-// WebRequest.swift
-// https://github.com/angra007/AANetworking
-// Copyright (c) 2013-16 Ankit Angra.
+//  WebRequest.swift
+//  Wand
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
+//  Created by Ankit Angra on 03/10/16.
+//  Copyright © 2016 Pro Unlimited Inc. All rights reserved.
 //
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
 
 import Foundation
 
@@ -53,10 +38,14 @@ class WebRequest : NSObject {
         return session
     }()
     
+    deinit {
+        print ("WebRequest dealloc called")
+    }
+    
     /// This method hits the server with the request constructed by the caller
     func sendRequest () {
         startDate = Date()
-        
+
         currentTask = downloadsSession.dataTask(with: self.request as URLRequest, completionHandler: { (data, response, error) in
             let timeSpent = Date().timeIntervalSince(self.startDate)
             self.errorLogString.append ("Time Spent for the Request \(String(describing: self.requestURL!)) is \(timeSpent) \n")
@@ -68,8 +57,8 @@ class WebRequest : NSObject {
                 validator = self.handleInvalidResponseFromServer(data)
             }
             
-            //            let log = WANDErrorLogModel.init(string: self.errorLogString as String!, shouldBeDeleted: true, shouldSendToServer: false)
-            //            WandErrorHandlerUtility.sharedRequestWebServiceErrorHandlerUtilities().savelog(log)
+//            let log = WANDErrorLogModel.init(string: self.errorLogString as String!, shouldBeDeleted: true, shouldSendToServer: false)
+//            WandErrorHandlerUtility.sharedRequestWebServiceErrorHandlerUtilities().savelog(log)
             print(self.errorLogString)
             
             if result.error != nil || validator.error != nil {
@@ -120,8 +109,16 @@ class WebRequest : NSObject {
     ///
     /// - returns: If the validation was successful data parameter will have the JSON. If there was error while validating them, respected error will go in error parameter. shouldRetry will denote if we have to send a retry request or not.
     func validateYourself (_ data : Data?, error : NSError?) -> (data : JSONDictionary?,error : NSError?,shouldRetry : Bool)  {
+        
+        func dataWithEscapingTabSpaces(withData data : Data) -> Data {
+            let string = String.init(data: data, encoding: String.Encoding.utf8)
+            let nospacestring : String! = string?.replacingOccurrences(of: "\\t", with: "    ", options:  .regularExpression, range: (string?.startIndex)!..<(string?.endIndex)!)
+            return nospacestring.data(using: String.Encoding.utf8)!
+        }
+        
         func validateJSON (withData data : Data) throws -> AnyObject? {
-            let json = try? JSONSerialization.jsonObject(with: data, options: [])
+            let escapedData = dataWithEscapingTabSpaces(withData: data)
+            let json = try? JSONSerialization.jsonObject(with: escapedData, options: [])
             return json as? AnyObject
         }
         
@@ -177,16 +174,16 @@ class WebRequest : NSObject {
     /// - parameter contentType: Content Type of the request
     /// - parameter completion:  This completion handler is called after we receive the data or error back from server
     func postRequest (withData data: Data, url : URL, contentType :RequestContentType, completion:@escaping WebRequestorCompletionHandler) {
-
         var sessionID : String? = nil
-        var privateKey : String! = nil
-        
-        if WebServiceManager.sharedManager.pKey != "" {
-            privateKey  =  WebServiceManager.sharedManager.pKey
+
+        let sessionIDs = HTTPCookieStorage.shared.cookies(for: url)
+        if let cookie = sessionIDs?.last {
+            sessionID =  "JSESSIONID=\(cookie.value) Path=\(cookie.path) Secure"
         }
-        
-        if WebServiceManager.sharedManager.cookie != "" {
-            sessionID  =  WebServiceManager.sharedManager.cookie
+
+        var privateKey : String! = nil
+        if WebServiceManager.sharedManager.pKey != nil {
+             privateKey  =  WebServiceManager.sharedManager.pKey
         }
         
         var pHash : String! = nil
@@ -202,7 +199,7 @@ class WebRequest : NSObject {
             var datastring = String(data: data, encoding: String.Encoding.utf8)
             
             if privateKey != nil {
-                datastring = "dtm=\(timeStamp)" + datastring!
+               datastring = "dtm=\(timeStamp)" + datastring!
             }
             else {
                 datastring = datastring!
@@ -227,10 +224,10 @@ class WebRequest : NSObject {
         }
         request.setValue(headerContentType, forHTTPHeaderField: "Content-Type")
         
-        //        if let id = sessionID
-        //        {
-        //            request.setValue(id, forHTTPHeaderField: "Cookie")
-        //        }
+//        if let id = sessionID
+//        {
+//            request.setValue(id, forHTTPHeaderField: "Cookie")
+//        }
         
         if let key = privateKey {
             let timeInterval = String (timeStamp)
@@ -249,7 +246,7 @@ class WebRequest : NSObject {
         
         if  privateKey != nil {
             errorLogString.append("pHash: \(pHash!) \n")
-            
+
         }
         errorLogString.append("HeaderContentType: \(headerContentType) \n")
         errorLogString.append("Body: \(String(data: postData, encoding: String.Encoding.utf8)!) \n")
@@ -288,10 +285,10 @@ class WebRequest : NSObject {
         request.setValue(headerContentType, forHTTPHeaderField: "Content-Type")
         requestURL = getURL
         
-        //        if let id = sessionID
-        //        {
-        //            request.setValue(id, forHTTPHeaderField: "Cookie")
-        //        }
+//        if let id = sessionID
+//        {
+//            request.setValue(id, forHTTPHeaderField: "Cookie")
+//        }
         
         if let key = privateKey {
             let timeInterval = String (timeStamp)
@@ -320,7 +317,7 @@ extension WebRequest : URLSessionDelegate {
         if let trust = servertrust {
             let trust_credential = URLCredential.init(trust: trust)
             if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
-                completionHandler(.useCredential, trust_credential)
+                    completionHandler(.useCredential, trust_credential)
             }
             else {
                 completionHandler(.performDefaultHandling, trust_credential)
@@ -340,7 +337,7 @@ extension WebRequest {
     /// - parameter error:       error which has to send back
     /// - parameter shouldRetry: shouldRetry the request
     func informCompletion(withData data: JSONDictionary?, error: NSError?) {
-        WebServiceManager.sharedManager.removeTask(currentTask)
+        downloadsSession.invalidateAndCancel()
         self.completionHandler? (data,error,errorLogString)
     }
 }

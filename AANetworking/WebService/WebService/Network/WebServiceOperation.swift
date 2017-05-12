@@ -1,39 +1,34 @@
 //
-// WebServiceOperation.swift
-// https://github.com/angra007/AANetworking
-// Copyright (c) 2013-16 Ankit Angra.
+//  WebServiceOperation.swift
+//  Wand
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
+//  Created by Ankit Angra on 03/10/16.
+//  Copyright © 2016 Pro Unlimited Inc. All rights reserved.
 //
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
 
 import Foundation
 
-final public class WebServiceOperation {
+open class WebServiceOperation {
+
+    var url : String?
+    var postData : Data?
+    var completionHandler : WebServiceCompletionHandler?
+    var processDownloadedData : ProcessDownloadCompletionHandler?
+    var methodType : RequestMethodType?
+    var contentType : RequestContentType?
     
-    fileprivate var url : String?
-    fileprivate var postData : Data?
-    fileprivate var completionHandler : WebServiceCompletionHandler?
-    fileprivate var processDownloadedData : ProcessDownloadCompletionHandler?
-    fileprivate var methodType : RequestMethodType?
-    fileprivate var contentType : RequestContentType?
+//    public init <A> (_ resource: Resource<A>) {
+//        url = resource.urlString
+//        postData = resource.data as Data?
+//        methodType = resource.methodType
+//        contentType = resource.contentType
+//        processDownloadedData = resource.parse
+//    }
+//    
     
-    public class func instantiate () -> WebServiceOperation {
-        return WebServiceOperation()
+    public init() {}
+    deinit {
+        print ("WebServiceOperation dealloc called")
     }
 }
 
@@ -56,7 +51,7 @@ extension WebServiceOperation {
 extension WebServiceOperation {
     
     func load () {
-        
+
         // URL Validation
         let urlString = self.url
         guard !urlString!.isEmpty else {
@@ -69,12 +64,12 @@ extension WebServiceOperation {
         if (self.contentType == .urlEncoded || self.contentType == .json)  {
             let JSONRequest  : WebRequest! = JSONRequestor ()
             if self.methodType == .get {
-                JSONRequest.getRequest(url!, completion: { (result, error,log) in
+                JSONRequest.getRequest(url!, completion: {  (result, error,log) in
                     self.handleDownloadCompletion(result, error: error,log: log)
                 })
             }
             else if self.methodType == .post {
-                JSONRequest.postRequest(withData: postData!, url: url!, contentType: contentType!,completion:  {(result, error,log) in
+                JSONRequest.postRequest(withData: postData!, url: url!, contentType: contentType!,completion:  { (result, error,log) in
                     self.handleDownloadCompletion(result, error: error,log: log)
                 })
             }
@@ -87,19 +82,27 @@ extension WebServiceOperation {
         
         
         if let result = result {
-            // Your logic to get data and status
-            guard let results : [String:AnyObject] = result[""] as? [String:AnyObject] else {  return }
-            guard let status : String = results[""] as? String else { return }
-            currentStatus = status
+            guard let results : [String:AnyObject] = result["data"] as? [String:AnyObject] else {  return }
+            
+            if let status = results["status"] {
+                currentStatus = String (describing: status)
+            }
+            
             object = self.processDownloadedData?(result)
         }
-        
+
         self.informCompletion(withData: object, error: error,log: log, status: currentStatus)
     }
     
     func informCompletion(withData result: AnyObject?, error: NSError?, log : NSString, status : String?) {
-        DispatchQueue.main.async {
+        DispatchQueue.main.async {  
             self.completionHandler? (result,error,log,status)
+//            self.contentType = nil
+//            self.methodType = nil
+//            self.processDownloadedData = nil
+//            self.completionHandler = nil
+//            self.postData = nil
+//            self.url = nil
         }
     }
 }
