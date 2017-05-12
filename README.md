@@ -32,7 +32,7 @@ Example of Usage:
 2. HTML Parsing Support
 3. Handling dependenies in web request
 4. <del> Handling POST request </del>
-5. Handling No Network
+5. <del> Handling No Network </del>
 6. Handling XML request
 7. Handling Image request
 8. <del> Handling Multipart Request </del>
