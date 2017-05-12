@@ -38,13 +38,32 @@ extension WebServiceOperation {
     /// - parameter resource:   This is the download resource. This will contain all the information to fetch data.
     /// - parameter completion: This is the completion Handler which will be called once we have some data or a error
     public func loadJSON<A>(_ resource: Resource<A>, completion:@escaping WebServiceCompletionHandler) {
-        url = resource.urlString
-        postData = resource.data as Data?
-        methodType = resource.methodType
-        contentType = resource.contentType
-        completionHandler = completion
-        processDownloadedData = resource.parse
-        load()
+        
+        
+        if isInternetActive () == true {
+            url = resource.urlString
+            postData = resource.data as Data?
+            methodType = resource.methodType
+            contentType = resource.contentType
+            completionHandler = completion
+            processDownloadedData = resource.parse
+            load()
+        }
+        else {
+            let noInternetError =  NSError (domain: "JSONError",code: -1000,userInfo: [NSLocalizedDescriptionKey: "Internet seems to be offline"])
+            self.informCompletion(withData: nil, error: noInternetError, log: "", status: nil)
+        }
+        
+    }
+    
+    func isInternetActive () -> Bool {
+        
+        var reachable = true
+        let internetStatus = Reachability.forInternetConnection().currentReachabilityStatus ()
+        if internetStatus == NotReachable {
+            reachable = false
+        }
+        return reachable
     }
 }
 

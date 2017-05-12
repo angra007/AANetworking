@@ -20,6 +20,8 @@
 		BCD4FD741E7A5BF700F593AC /* NetworkUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = BCD4FD701E7A5BF700F593AC /* NetworkUtility.m */; };
 		BCD4FD751E7A5BF700F593AC /* NSData_Base64Encoding.h in Headers */ = {isa = PBXBuildFile; fileRef = BCD4FD711E7A5BF700F593AC /* NSData_Base64Encoding.h */; };
 		BCD4FD761E7A5BF700F593AC /* NSData_Base64Encoding.m in Sources */ = {isa = PBXBuildFile; fileRef = BCD4FD721E7A5BF700F593AC /* NSData_Base64Encoding.m */; };
+		BCF11E9B1EC58B5700F7A0B8 /* Reachability.h in Headers */ = {isa = PBXBuildFile; fileRef = BCF11E991EC58B5700F7A0B8 /* Reachability.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BCF11E9C1EC58B5700F7A0B8 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = BCF11E9A1EC58B5700F7A0B8 /* Reachability.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +51,8 @@
 		BCD4FD701E7A5BF700F593AC /* NetworkUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NetworkUtility.m; path = Utilities/NetworkUtility.m; sourceTree = "<group>"; };
 		BCD4FD711E7A5BF700F593AC /* NSData_Base64Encoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSData_Base64Encoding.h; path = Utilities/NSData_Base64Encoding.h; sourceTree = "<group>"; };
 		BCD4FD721E7A5BF700F593AC /* NSData_Base64Encoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSData_Base64Encoding.m; path = Utilities/NSData_Base64Encoding.m; sourceTree = "<group>"; };
+		BCF11E991EC58B5700F7A0B8 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = Utilities/Reachability.h; sourceTree = "<group>"; };
+		BCF11E9A1EC58B5700F7A0B8 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = Utilities/Reachability.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,6 +136,8 @@
 		BCD4FD6E1E7A5BE500F593AC /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				BCF11E991EC58B5700F7A0B8 /* Reachability.h */,
+				BCF11E9A1EC58B5700F7A0B8 /* Reachability.m */,
 				BCD4FD6F1E7A5BF700F593AC /* NetworkUtility.h */,
 				BCD4FD701E7A5BF700F593AC /* NetworkUtility.m */,
 				BCD4FD711E7A5BF700F593AC /* NSData_Base64Encoding.h */,
@@ -148,6 +154,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BCD4FD731E7A5BF700F593AC /* NetworkUtility.h in Headers */,
+				BCF11E9B1EC58B5700F7A0B8 /* Reachability.h in Headers */,
 				BCD4FD751E7A5BF700F593AC /* NSData_Base64Encoding.h in Headers */,
 				BCD4FD491E7A5A7300F593AC /* WebService.h in Headers */,
 			);
@@ -262,6 +269,7 @@
 				BCD4FD661E7A5B3B00F593AC /* JSONRequestor.swift in Sources */,
 				BCD4FD671E7A5B3B00F593AC /* WebRequeseResources.swift in Sources */,
 				BCD4FD6D1E7A5B8B00F593AC /* Constants.swift in Sources */,
+				BCF11E9C1EC58B5700F7A0B8 /* Reachability.m in Sources */,
 				BCD4FD741E7A5BF700F593AC /* NetworkUtility.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

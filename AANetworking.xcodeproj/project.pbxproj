@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		BCD4FD821E7A5FA300F593AC /* NetworkHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD4FD811E7A5FA300F593AC /* NetworkHelper.swift */; };
+		BCF11EA01EC58C6200F7A0B8 /* WebService.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCD4FD7D1E7A5E4B00F593AC /* WebService.framework */; };
 		DE5096D21D8F7FE80002196A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5096D01D8F7FE80002196A /* AppDelegate.swift */; };
 		DE5096D31D8F7FE80002196A /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DE5096D11D8F7FE80002196A /* Info.plist */; };
 		DE5096D51D8F80220002196A /* Episode.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5096D41D8F80220002196A /* Episode.swift */; };
@@ -70,7 +71,6 @@
 		DE5096D11D8F7FE80002196A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Root/Info.plist; sourceTree = "<group>"; };
 		DE5096D41D8F80220002196A /* Episode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Episode.swift; path = AANetworking/Example/Model/Episode.swift; sourceTree = "<group>"; };
 		DE5096D61D8F802B0002196A /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ViewController.swift; path = AANetworking/Example/Controller/ViewController.swift; sourceTree = "<group>"; };
-		DED0183E1D745EF8009311D2 /* AANetworking-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AANetworking-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
 		DEF4E5F41D6C29160022992C /* AANetworking.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AANetworking.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DEF4E5FC1D6C29160022992C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		DEF4E5FE1D6C29160022992C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -88,6 +88,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BCF11EA01EC58C6200F7A0B8 /* WebService.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -173,7 +174,6 @@
 				DE5096D11D8F7FE80002196A /* Info.plist */,
 				DEF4E5FE1D6C29160022992C /* Assets.xcassets */,
 				DEF4E6001D6C29160022992C /* LaunchScreen.storyboard */,
-				DED0183E1D745EF8009311D2 /* AANetworking-Bridging-Header.h */,
 			);
 			name = Root;
 			path = AANetworking;
@@ -510,7 +510,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = MyObjcApp.AANetworking;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "AANetworking-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
@@ -526,7 +525,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = MyObjcApp.AANetworking;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "AANetworking-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;

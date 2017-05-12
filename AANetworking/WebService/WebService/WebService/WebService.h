@@ -23,6 +23,7 @@
 
 #import <UIKit/UIKit.h>
 #import <WebService/NetworkUtility.h>
+#import <WebService/Reachability.h>
 //! Project version number for WebService.
 FOUNDATION_EXPORT double WebServiceVersionNumber;
 
