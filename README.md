@@ -1,6 +1,6 @@
 # AANetworking
 
-AANetworking is a network framework written in Swift 3. The original idea of the design was inspired by a talk on https://www.objc.io/. However, the design has been simplified and extended to and to implement POST Request, Multipart, AES256 and a lot more.
+AANetworking is a network framework. The original idea of the design was inspired by a talk on https://www.objc.io/. However, the design has been simplified and extended to and to implement POST Request, Multipart, AES256 and a lot more.
 
 # Using it in your project
 If you need maintaine session your app, pass your cookies to 
