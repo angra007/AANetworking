@@ -30,6 +30,7 @@ open class WebServiceOperation {
     var processDownloadedData : ProcessDownloadCompletionHandler?
     var methodType : RequestMethodType?
     var contentType : RequestContentType?
+    public init() {}
 }
 
 extension WebServiceOperation {

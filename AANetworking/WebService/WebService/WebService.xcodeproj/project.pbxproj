@@ -212,7 +212,7 @@
 					BCD4FD371E7A5A7300F593AC = {
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = H4L8MWY7R8;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 0920;
 						ProvisioningStyle = Automatic;
 					};
 					BCD4FD401E7A5A7300F593AC = {
@@ -410,7 +410,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -431,7 +432,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.angraankit.www.WebService;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};

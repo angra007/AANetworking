@@ -14,14 +14,13 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
 
-        NetworkHelper.get(url: "url", parse: { (dict) -> AnyObject? in
-            // This is your parser. Return modeled data from here
-            
+        
+        DownloadManager<Any>.get(url: "url", parse: { (dict) -> AnyObject? in
             return dict as? AnyObject
-        }) { (data, error) in
+        }, completion: { (data, error) in
             
-            // This is your completion handler
-        }
+            // Thi  s is your completion handler
+        })
         
         
     }

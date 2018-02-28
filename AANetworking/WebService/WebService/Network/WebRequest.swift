@@ -97,7 +97,7 @@ class WebRequest : NSObject {
     }
     
     /// This method has to be handled by the base class to support any kind of retry
-    func handleRetry () {
+    @objc func handleRetry () {
         
     }
     
