@@ -1,13 +1,13 @@
 # AANetworking
 
-AANetworking is a network framework. The original idea of the design was inspired by a talk on https://www.objc.io/. However, the design has been simplified and extended to and to implement POST Request, Multipart, AES256 and a lot more.
+AANetworking is a concept for a very light weight network framework. Right now it supports GET and POST requests with public, private key encryption. This can be extended to support any kind of API request. 
 
 # Using it in your project
 If you need maintaine session your app, pass your cookies to 
 ```
 Swift WebServiceManager.sharedManager.cookie
 ``` 
-for and AES256 pass pKey to 
+Initilize your public key at
 ```
 Swift WebServiceManager.sharedManager.pKey
 ``` 
