@@ -1,12 +1,9 @@
 # AANetworking
 
-AANetworking is a concept for a very light weight network framework. It supports GET and POST requests with public, private key encryption and exponential backoff.  
+AANetworking is a concept for a very light weight network framework. It supports GET and POST requests with public, private key encryption, exponential backoff, SSL certificate validation etc.  
 
 # Using it in your project
-If you need maintaine session your app, pass your cookies to 
-```
-Swift WebServiceManager.sharedManager.cookie
-``` 
+
 Initilize your public key at
 ```
 Swift WebServiceManager.sharedManager.pKey
