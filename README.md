@@ -1,6 +1,6 @@
 # AANetworking
 
-AANetworking is a concept for a very light weight network framework. Right now it supports GET and POST requests with public, private key encryption. This can be extended to support any kind of API request. 
+AANetworking is a concept for a very light weight network framework. It supports GET and POST requests with public, private key encryption and exponential backoff.  
 
 # Using it in your project
 If you need maintaine session your app, pass your cookies to 
